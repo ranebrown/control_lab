@@ -1,0 +1,75 @@
+\documentclass[11pt,titlepage]{article}
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{color}
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning,calc}
+\usepackage{float}
+\restylefloat{table}
+\usepackage{array}
+\tikzset{
+	block/.style = {draw, fill=white, rectangle, minimum height=3em, minimum width=3em},
+	sum/.style = {draw, fill=white, circle, node distance=1cm},
+	input/.style = {draw=none},
+	output/.style = {draw=none},
+	coord/.style = {coordinate}
+}
+
+\author{Rane Brown \\ Kate Schneider}
+\title{ECEN 4638: Lab X.1P}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Description}
+	The purpose of this lab is to explore the torsion disc system and experimentally collect data that will help in the design of a proportional controller. The torsion disc system consists of a platform with three discs aligned above a driving motor. There are various configurations for the torsion disc system and this lab will use a basic setup described below. 
+	\textcolor{red}{Add picture of torsion disc system?}
+
+\section{Setup}
+	There are three main components that will be necessary for this lab.
+	\begin{enumerate}
+		\item LabView
+		\item Matlab
+		\item Torsion Disc System
+	\end{enumerate}
+	LabView and Matlab do not require any setup as they are installed on all lab computers. \\\\
+	The torsion disc system must be configured for proper use. For this experiment the top two discs and any attached weights should be removed. After the weights and discs are removed the system cables can be connected.
+	\begin{enumerate}
+		\item loosen allen key screws on weights (do not remove weights on lower disc)
+		\item remove weights
+		\item loosen allen key screws on top two discs
+		\item each disc detaches as two pieces
+		\item remove the discs
+		\item attach all labeled connectors
+	\end{enumerate}
+
+\section{LabView Intro}
+	LabView is a high level program that will be used to control the torsion disc system. Data from the system will also be collected using LabView. The general idea is to build a block diagram of the system with appropriate input and output values as well as a configurable controller. In order to understand the operation of LabView it is useful to create a demo system before beginning work on the Torsion Disc system.
+	\subsection{Simulation Loop}
+		The below simulation loop was created in LabView. Transfer function blocks were used for the vehicle and controller while the reference and disturbance inputs use lookup tables. The output of the system is written to an external file.
+		\textcolor{red}{Add screenshot of labview intro simulation}
+	\subsection{Controller Results}
+		The collected results from the LabView simulations were taken and compared to the Simulink model used in LabX. As seen in the below plots, the results from LabView and simulink are comparable.
+		\textcolor{red}{Add plots of LabView vs. Matlab plots}
+	\subsection{Disturbance} 
+		As a final experiment the below disturbance was introduced to the LabView simulation. The $P$ and $P_I$ values were chosen in order to produce acceptable responses.
+		\textcolor{red}{Add graph of disturbance}
+		\textcolor{red}{Add P and PI values}
+
+\section{Data Collection}
+	To create a LTI model for the Torsion Disc system it is necessary to collect data that can be used to estimate system parameters. A LabView model is used to control the system and collect necessary data. The LabView model (shown below) was provided for this experiment and can be found on the ITLL share drive. Two experiments were conducted to collect the needed data.
+	\textcolor{red}{Add picture of LabView system}
+	\subsection{No motor voltage}
+		The first experiment is conducted with no power connected to the Torsion Disc motor. In this experiment 
+	\subsection{Powered Torsion Disc System}
+
+\section{LTI Model}
+	\subsection{Estimating model values}
+
+\section{Proportional Controller Design}
+
+\end{document}
