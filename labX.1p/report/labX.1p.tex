@@ -132,7 +132,22 @@
 			\item rename file to reflect parameter values
 			\item repeat for the values listed in below table
 		\end{enumerate}
-		\textcolor{red}{add table showing values we collected data for}
+		\textcolor{red}{Fill in values}
+		\begin{table}[h!]
+			\centering
+			\begin{tabular}{|m{4cm}|m{3cm}|m{3cm}|} 
+				\hline
+				Reference rad/sec & $K_p$ & Disturbance \\ 
+				\hline
+				4 & 9 & val \\
+				\hline
+				4 & 7.5 & val\\
+				\hline
+				2 & 4 & val \\
+				\hline
+			\end{tabular}
+			\caption{Data Collection Parameters} \label{table:data_param}
+		\end{table}
 
 \section{LTI Model} \label{sec:LTI}
 	The Torsion Disc system can be modeled as an LTI system with the below equation.
@@ -141,8 +156,13 @@
 	\end{equation}
 	Where $J=\mbox{ total system inertia}$, $\omega=\mbox{ velocity rad/sec}$, $c=\mbox{ system drag}$, $k_h=\mbox{ hardware gain}$, $u=\mbox{ reference}$.
 
-	\subsection{Estimating model values}
-	Using equation \ref{eq:lti} and the collected data the value of $c$ can be estimated.
+	\subsection{Calculating parameter $J$}
+
+	\subsection{Estimating parameter $c$}
+
+	\subsection{Estimating parameter $k$}
+
+\section{Introducing sinusoid to reference}
 
 \section{Proportional Controller Design}
 
