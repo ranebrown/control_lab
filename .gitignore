@@ -186,3 +186,7 @@ pythontex-files-*/
 
 # Latexian
 TSWLatexianTemp*
+
+# sublime projects
+*.sublime-project
+*.sublime-workspace
