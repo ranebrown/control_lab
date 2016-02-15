@@ -101,7 +101,6 @@
 			\item data is saved as a text file
 			\item change filename to reflect the weight position
 		\end{enumerate}
-			\textcolor{red}{Verify weight radius, add inertias}
 		\begin{table}[h!]
 			\centering
 			\begin{tabular}{|m{4cm}|m{3cm}|m{3cm}|} 
@@ -147,6 +146,8 @@
 			\end{tabular}
 			\caption{Data Collection Parameters} \label{table:data_param}
 		\end{table}
+		\subsection{Observations}
+		While performing the torsion disc experiment with motor power on, it was found that too large a gain $k_p$ produced undesired effects in the system. When $k_p$ was increased above 15, the motor voltage became very noisy, and the system began to show signs of instability. A $k_p$ value of 10 was found to produce less noise in the motor while still providing a large gain for the system. 
 
 \section{LTI Model} \label{sec:LTI}
 	The Torsion Disc system can be modeled as an LTI system with the below equation.
@@ -156,9 +157,9 @@
 	Where $J=\mbox{ total system inertia}$, $\omega=\mbox{ velocity rad/sec}$, $c=\mbox{ system drag}$, $k_h=\mbox{ hardware gain}$, $u=\mbox{ reference}$.
 
 	\subsection{Calculating parameter $J$}
-	The inertia of the system can be calculated from the system parameters (inertia of the torsion disk, $J_{disk}$, inertia of the motor, $J_{motor}$, and inertia of the weights, $J_{weight}$) as follows:
+	The inertia of the system can be calculated from the system parameters (inertia of the torsion disc, $J_{disc}$, inertia of the motor, $J_{motor}$, and inertia of the weights, $J_{weight}$) as follows:
 	\begin{equation}\label{eq:lti} 
-		J_{disk}=0.0019\\
+		J_{disc}=0.0019\\
 	\end{equation}
 	\begin{equation}
 		J_{motor}=0.0005\\
@@ -168,7 +169,7 @@
 	\end{equation}
 	Thus the total inertia is:
 	\begin{align}
-		J_{tot}&=J_{disk}+J_{motor}+J_{weight}\nonumber\\
+		J_{tot}&=J_{disc}+J_{motor}+J_{weight}\nonumber\\
 		J_{tot}&=0.0019+0.0005+\sum\limits_{i=1}^{N} \frac{1}{2}mr^2 + mR^2
 	\end{align}
 
@@ -231,11 +232,13 @@ Sample plots used to evaluate average rotational velocity $\omega$ and average m
 	\end{figure}
 	
 \section{Introducing sinusoid to reference}
+	\subsection{Frequency response and Bode analysis}
+	
 	With proportional control $k_p$, we see that the closed-loop transfer function of our system is 
 	\begin{equation}
-		H(s)=\frac{\frac{k_pk}{J}}{s+\frac{c}{J}+\frac{k_pk}{J}}
+		H(s)=\frac{\frac{k_pk}{J}}{s+\frac{c+k_pk}{J}}
 	\end{equation}
-	Substituting our values for $k_p$ and $c$ in the system, for a gain of $k=1$, and an arrangement of 4 masses at 9 cm from the center of the disk ($J = 0.0192$), the transfer function becomes 
+	Substituting our values for $k_p$ and $c$ in the system, for a gain of $k=1$, and an arrangement of 4 masses at 9 cm from the center of the disc ($J = 0.0192$), the transfer function becomes 
 	\begin{equation}
 		H(s)=\frac{18.74}{s + 19.15}
 	\end{equation}
@@ -247,16 +250,15 @@ Sample plots used to evaluate average rotational velocity $\omega$ and average m
 		\caption{Bode Plot of System Transfer Function $H(s)$}
 		\label{fig:bode_Hs}
 	\end{figure}
+	The bandwidth of the system is determined from the Bode plot to be 19.015 Hz.\\\\
 	
-	The bandwidth of the system is determined from the Bode plot to be 19.015 Hz. \\\\
-	\textcolor{red}{more on motor saturation here?}
-	
+	\subsection{System response to sinusoidal input}
 	A sinusoidal input can be introduced to the system to further investigate the frequency response and time/phase delay of the system. For the LTI model, the introduction of a time delay results in the system equation 
 	\begin{equation}
 		J(\omega b_{\omega}cos(\omega t)-\omega a_{\omega}sin(\omega t)+c(a_{\omega}cos(\omega t)+b_{omega}sin(\omega t)) = a_ucos(w(t-T_D))+b_usin(w(t-T_D)).
 	\end{equation}
 	\\
-	This representation of the system is explored in more detail in the third data collection experiment, which was conducted with the power connected to the Torsion Disc system and a sinusoidal reference input $\delta V_{ref}=2sin\pi ft$ added to the constant reference input. In this case the values system parameters $k_p$ and $f$ are adjusted in LabView while the weights remain in the same position. The collected data is then used to investigate frequency response of the system.
+	This representation of the system is explored in more detail in the third data collection experiment, which was conducted with the power connected to the Torsion Disc system and a sinusoidal reference input $\delta V_{ref}=2sin\pi ft$ added to the constant reference input. In this case the values of system parameters $k_p$ and $f$ are adjusted in LabView while the weights remain in the same position. The collected data is then used to investigate frequency response of the system.
 	\subsection*{Steps}
 		\begin{enumerate}
 			\item set reference speed to 6.28 rad/sec
@@ -282,6 +284,10 @@ Sample plots used to evaluate average rotational velocity $\omega$ and average m
 			\end{tabular}
 			\caption{Frequency Response Parameters} \label{table:freq_param}
 		\end{table}
+		
+			From further experimentation with the system, we found that increasing the frequency of our input sinusoid above the bandwidth of the system did not cause the expected roll-off in amplitude even with a slight increase in $k_p$, $k_p >$ \textcolor{red}{what was the highest $k_p$ where this worked?}. The input motor voltage was saturated for too high a $k_p$, suggesting additional dynamics at play in our system.
+		
+		\subsection{Fourier fit of sinusoidal input and response}	
 		The sinusoidal input for motor voltage $u$ and output for rotational velocity $\omega$ can be graphically fit using fourier series, and the fourier coefficients can be obtained from this nonlinear curve fitting. Below the data for $u$ and $\omega$ are plotted (data points) along with their best fit sinusoids (blue line) for $k_p=1$ and $f=5$Hz.
 		
 	\begin{figure}[h!]
@@ -308,8 +314,10 @@ Sample plots used to evaluate average rotational velocity $\omega$ and average m
 		J\omega b_{\omega}(\omega)+ca_{\omega}(\omega)&=k(a_u(\omega)cos(\omega T_D)-b_u(\omega)sin(\omega T_d)\\
 		J\omega 1.289+(-0.544)c&=k(2.712cos(\omega T_D)+1.435sin(\omega T_d))
 	\end{align}
-	\textcolor{red}{what to do with this??}
-	The time delay $T_D$ is estimated to be on the order of several hundredths of a second. 
+
+	The time delay $T_D$ is estimated to be on the order of several hundredths of a second. Time delay and its impact on system stability will be examined in further experiments involving the torsion disc system. 
 \section{Proportional Controller Design}
+
+	The proportional controller for the torsion disc cruise control system must provide a relatively fast response, minimal overshoot, little error in steady state when tracking a constant velocity reference input, and some small finite error in disturbance rejection as well, so that bumps and hills do not greatly affect the system's performance. These objectives suggest a relatively large value for $k_p$, such as $k_p=10$, which was found to reduce instability and motor noise during experimentation with the system. However, when a non-constant input - such as a sinusoid - is introduced to the system, it was discovered that a much smaller value of $k_p$ was desired to avoid motor voltage saturation and to keep the system stable. If non-constant inputs are expected, then a smaller value of $k_p$, $k_p\leq1 is desired. Thus, the best design for the proportional controller depends largely on the expected reference and disturbance inputs for a system. Beyond finding the best possible proportional gain for the system, we should investigate other methods of control. The introduction of integral control should provide more control over various aspects of the system, better steady state error and disturbance rejection, and a more robust system overall. PI control will be examined further for this system in the next set of experiments. 
 
 \end{document}
