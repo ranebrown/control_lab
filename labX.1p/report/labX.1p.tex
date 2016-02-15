@@ -63,13 +63,13 @@
 			\begin{minipage}{.5\textwidth}
 				\centering
 				\includegraphics[scale=.4]{Kp1}
-				\caption{figure}{P Controller $K_p=1$}
+				\caption{P Controller $K_p=1$}
 				\label{fig:kp1}
 			\end{minipage}%
 			\begin{minipage}{.5\textwidth}
 				\centering
 				\includegraphics[scale=.4]{Kp5KI10}
-				\caption{figure}{PI Controller $K_p=5$ $K_I=10$}
+				\caption{PI Controller $K_p=5$ $K_I=10$}
 				\label{fig:kp5KI10}
 			\end{minipage}%
 		\end{figure}	
@@ -101,7 +101,6 @@
 			\item data is saved as a text file
 			\item change filename to reflect the weight position
 		\end{enumerate}
-			\textcolor{red}{Verify weight radius, add inertias}
 		\begin{table}[h!]
 			\centering
 			\begin{tabular}{|m{4cm}|m{3cm}|m{3cm}|} 
@@ -129,20 +128,21 @@
 			\item turn the power on
 			\item press the run button in LabView, data is saved as a text file
 			\item rename file to reflect parameter values
-			\item repeat for the values listed in below table
+			\item repeat for the values listed in table \ref{table:data_param}
 		\end{enumerate}
-		\textcolor{red}{Fill in values}
-		\begin{table}[h!]
+		\begin{table}[H]
 			\centering
 			\begin{tabular}{|m{4cm}|m{3cm}|m{3cm}|} 
 				\hline
 				Reference rad/sec & $K_p$ & Disturbance \\ 
 				\hline
-				rad/sec & $k_p$ & dist\\
+				3.14 & 1,5,10 & 0\\
 				\hline
-				rad/sec & $k_p$ & dist\\
+				3.14 & 1,5,10 & 1\\
 				\hline
-				rad/sec & $k_p$ & dist \\
+				6.28 & 1,5,10 & 0 \\
+				\hline
+				6.28 & 1,5,10 & 1 \\
 				\hline
 			\end{tabular}
 			\caption{Data Collection Parameters} \label{table:data_param}
@@ -157,12 +157,8 @@
 
 	\subsection{Calculating parameter $J$}
 	The inertia of the system can be calculated from the system parameters (inertia of the torsion disk, $J_{disk}$, inertia of the motor, $J_{motor}$, and inertia of the weights, $J_{weight}$) as follows:
-	\begin{equation}\label{eq:lti} 
-		J_{disk}=0.0019\\
-	\end{equation}
-	\begin{equation}
-		J_{motor}=0.0005\\
-	\end{equation}
+		$$J_{disk}=0.0019$$
+		$$J_{motor}=0.0005$$
 	\begin{equation}
 		J_{weight}=\sum\limits_{i=1}^{N} \frac{1}{2}mr^2 + mR^2\\
 	\end{equation}
@@ -175,9 +171,9 @@
 	\subsection{Estimating parameter $c$}
 	From the LTI model above, system drag $c$ can be estimated as follows:
 	\begin{align}
-		\omega(t)=e^{\frac{-c}{J}t_1}\omega(t_0)\nonumber\\
-		ln\left( \frac{\omega(t_1)}{\omega(t_0)}\right)=\frac{-c}{J}(t_1-t_0)\nonumber\\
-		c=\frac{-Jln\left(\frac{\omega(t_1)}{\omega(t_0)}\right)}{t_1-t_0}\label{eq:find_c}
+		\omega(t)&=e^{\frac{-c}{J}t_1}\omega(t_0)\nonumber\\
+		ln\left( \frac{\omega(t_1)}{\omega(t_0)}\right)&=\frac{-c}{J}(t_1-t_0)\nonumber\\
+		c&=\frac{-Jln\left(\frac{\omega(t_1)}{\omega(t_0)}\right)}{t_1-t_0}\label{eq:find_c}
 	\end{align}
 	To estimate $c$ from collected data, the natural logarithm of angular velocity $\omega$ is plotted against time. A reasonably straight part of the curve is chosen, from time $t_0$ to time $t_1$. The total system inertia and angular velocities $\omega(t_0)$ and $\omega(t_1)$ are then used with equation~\ref{eq:find_c} to estimate system drag $c$. Plots of filtered and unfiltered angular velocity data were analyzed, and filtering was found not to significantly affect the plot or $c$ value obtained from the data. Thus, the unfiltered velocity data alone was used to estimate $c$. This was repeated for several experiments and $c$ values were averaged, resulting in a $c$ value of 
 	\begin{equation}
@@ -198,34 +194,33 @@
 		c\omega=k_hu\nonumber\\
 		k_h=\frac{\omega}{u}c\label{eq:k_h}
 	\end{align}
-	Hardware gain $k_h$ can be estimated from the above equation, where $c$ is calculated as in the previous section, $\omega$ is the average rotational velocity of the system, and $u$ is the average motor voltage when the system is running at a constant speed. Parameters $\omega$ and $u$ were plotted against time to determine when the system was at a constant speed. $\omega$ and $u$ were averaged over the chosen time period and equation~ref{eq:$k_h$} was then used to estimate $k_h$. This was repeated for several experiments and $\omega$ and $u$ values were averaged. The resulting $k_h$ value is
+	Hardware gain $k_h$ can be estimated from the above equation, where $c$ is calculated as in the previous section, $\omega$ is the average rotational velocity of the system, and $u$ is the average motor voltage when the system is running at a constant speed. Parameters $\omega$ and $u$ were plotted against time to determine when the system was at a constant speed. $\omega$ and $u$ were averaged over the chosen time period and equation \ref{eq:k_h} was then used to estimate $k_h$. This was repeated for several experiments and $\omega$ and $u$ values were averaged. The resulting $k_h$ value is
 	\begin{equation}
 		k_h=0.3598\nonumber
 	\end{equation}
-	
-	This value for $k_h$ is very close to the nominal value calculated from system parameters \\\\
+	This value for $k_h$ is very close to the nominal value calculated from system parameters 
 	\begin{align*}
-		Pulley\hspace{0.1cm}Magnification\hspace{0.5cm}k_p&=3 \hspace{1cm}\frac{Nm}{Nm}\\
-		Drive\hspace{0.1cm}Motor\hspace{0.1cm}Torque\hspace{0.1cm}Constant \hspace{0.5cm}k_m&=0.086 \hspace{1cm} \frac{Nm}{Nm}\\
-		Drive\hspace{0.1cm}Motor\hspace{0.1cm}Amplifier\hspace{0.1cm}Current\hspace{0.1cm}Gain \hspace{0.5cm}k_a&=1.5\hspace{1cm} \frac{A}{V}
+		&\mbox{\emph{Pulley Magnification}} 				& 		k_p&=3 		&	&\frac{Nm}{Nm}\\
+		&\mbox{\emph{Drive Motor Torque Constant}} 			&	 	k_m&=0.086 	&	&\frac{Nm}{Nm}\\
+		&\mbox{\emph{Drive Motor Amplifier Current Gain}} 	& 		k_a&=1.5 	&	&\frac{A}{V}
 	\end{align*}
 	\begin{align*}
 		k_{h nominal}&=k_pk_mk_a\\
 		k_{h nominal}&=0.387
 	\end{align*}
 
-Sample plots used to evaluate average rotational velocity $\omega$ and average motor voltage $u$ are shown below. The time period from $t_0=2$ seconds to $t_1=7$ seconds was used to calculate average $\omega$ and $u$.
+\noindent Sample plots used to evaluate average rotational velocity $\omega$ and average motor voltage $u$ are shown below. The time period from $t_0=2$ seconds to $t_1=7$ seconds was used to calculate average $\omega$ and $u$.
 
-	\begin{figure}[h!]
+	\begin{figure}[H]
 		\centering
-		\includegraphics[trim={6cm 0 0 0},clip,angle=0,origin=c,scale=0.2]{w_vs_time}
+		\includegraphics[scale=0.15]{w_vs_time}
 		\caption{Rotational Velocity $\omega$ vs. Time}
 		\label{fig:w_vs_time}
 	\end{figure}
 
-	\begin{figure}[h!]
+	\begin{figure}[H]
 		\centering
-		\includegraphics[trim={6cm 0 0 0},clip,angle=0,origin=c,scale=0.2]{u_vs_time}
+		\includegraphics[scale=0.15]{u_vs_time}
 		\caption{Motor Voltage $u$ vs. Time}
 		\label{fig:u_vs_time}
 	\end{figure}
@@ -239,23 +234,19 @@ Sample plots used to evaluate average rotational velocity $\omega$ and average m
 	\begin{equation}
 		H(s)=\frac{18.74}{s + 19.15}
 	\end{equation}
-	A Bode plot of the system transfer function is shown below. 
+	A Bode plot of the system transfer function is shown in figure \ref{fig:bode_Hs}. The bandwidth of the system is determined from the Bode plot to be 19.015 Hz.
 
 	\begin{figure}[h!]
 		\centering
-		\includegraphics[trim={6cm 0 0 0},clip,angle=0,origin=c,scale=0.2]{bode_Hs}
+		\includegraphics[scale=0.15]{bode_Hs}
 		\caption{Bode Plot of System Transfer Function $H(s)$}
 		\label{fig:bode_Hs}
 	\end{figure}
-	
-	The bandwidth of the system is determined from the Bode plot to be 19.015 Hz. \\\\
-	\textcolor{red}{more on motor saturation here?}
-	
 	A sinusoidal input can be introduced to the system to further investigate the frequency response and time/phase delay of the system. For the LTI model, the introduction of a time delay results in the system equation 
-	\begin{equation}
-		J(\omega b_{\omega}cos(\omega t)-\omega a_{\omega}sin(\omega t)+c(a_{\omega}cos(\omega t)+b_{omega}sin(\omega t)) = a_ucos(w(t-T_D))+b_usin(w(t-T_D)).
-	\end{equation}
-	\\
+	\begin{multline}
+		J(\omega b_{\omega}cos(\omega t)-\omega a_{\omega}sin(\omega t)+c(a_{\omega}cos(\omega t)+b_{omega}sin(\omega t))\\
+        = a_ucos(w(t-T_D))+b_usin(w(t-T_D))
+	\end{multline}
 	This representation of the system is explored in more detail in the third data collection experiment, which was conducted with the power connected to the Torsion Disc system and a sinusoidal reference input $\delta V_{ref}=2sin\pi ft$ added to the constant reference input. In this case the values system parameters $k_p$ and $f$ are adjusted in LabView while the weights remain in the same position. The collected data is then used to investigate frequency response of the system.
 	\subsection*{Steps}
 		\begin{enumerate}
@@ -283,27 +274,23 @@ Sample plots used to evaluate average rotational velocity $\omega$ and average m
 			\caption{Frequency Response Parameters} \label{table:freq_param}
 		\end{table}
 		The sinusoidal input for motor voltage $u$ and output for rotational velocity $\omega$ can be graphically fit using fourier series, and the fourier coefficients can be obtained from this nonlinear curve fitting. Below the data for $u$ and $\omega$ are plotted (data points) along with their best fit sinusoids (blue line) for $k_p=1$ and $f=5$Hz.
-		
-	\begin{figure}[h!]
+	\begin{figure}[H]
 		\centering
-		\includegraphics[trim={6cm 0 0 0},clip,angle=0,origin=c,scale=0.3]{fourier_volt_5Hz}
+		\includegraphics[scale=0.25]{fourier_volt_5Hz}
 		\caption{Fourier Fit of Motor Command Voltage $u$}
 		\label{fig:fourier_volt_5Hz}
 	\end{figure}
-	
-	\begin{figure}[h!]
+	\begin{figure}[H]
 		\centering
-		\includegraphics[trim={6cm 0 0 0},clip,angle=0,origin=c,scale=0.3]{fourier_vel_5Hz}
+		\includegraphics[scale=0.25]{fourier_vel_5Hz}
 		\caption{Fourier Fit of Rotational Velocity $\omega$}
 		\label{fig:fourier_vel_5Hz}
 	\end{figure}
-	
-	The fourier coefficients obtained from the sinusoidal curve fitting are
+    \noindent The fourier coefficients obtained from the sinusoidal curve fitting are
 	\begin{equation}
 		a_{\omega}=-0.5444\hspace{0.5cm}b_{\omega}=1.289\hspace{0.5cm}a_u=2.712\hspace{0.5cm}b_u=-1.435\nonumber
 	\end{equation}
-	
-	Inserting the above parameters into the fourier form of our LTI system equation, and separating into sine and cosine parts, we get
+	\noindent Inserting the above parameters into the fourier form of our LTI system equation, and separating into sine and cosine parts, we get
 	\begin{align}
 		J\omega b_{\omega}(\omega)+ca_{\omega}(\omega)&=k(a_u(\omega)cos(\omega T_D)-b_u(\omega)sin(\omega T_d)\\
 		J\omega 1.289+(-0.544)c&=k(2.712cos(\omega T_D)+1.435sin(\omega T_d))
