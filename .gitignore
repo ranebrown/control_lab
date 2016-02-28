@@ -192,3 +192,6 @@ TSWLatexianTemp*
 # sublime projects
 *.sublime-project
 *.sublime-workspace
+
+#matlab
+*.m~
