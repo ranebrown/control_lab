@@ -49,7 +49,7 @@
         \zeta &= \frac{|\ln(0.05)|}{\sqrt{\pi^2+[ln(0.05)]^2}} = 0.69 \label{eq:zeta} \\[1em]
         \omega_n &= \frac{1.8}{0.5} = 3.6 \label{eq:omega}
     \end{align}
-    These values were used as an initial starting point and adjustments were made based on the response calculated in matlab and the corresponding response on the TDS. In cases where the overshoot became too high the damping was increased. It also became necessary to increase the bandwidth of the system in order to reduce the noise on the live system. Table \ref{table:respData} shows the various calculated values based on necessary changes. For each iteration the value in bold was adjusted to improve the response.
+    These values were used as an initial starting point and adjustments were made based on the response calculated in matlab and the corresponding response on the TDS. In cases where the overshoot became too high the damping was increased. It also became necessary to increase the bandwidth of the system in order to reduce the noise on the live system. Table \ref{table:respData} shows the various calculated values based on necessary changes. For each iteration the value in bold was adjusted to improve the response. The adjustments were determined based on the response of the system to a step input as outlined in section \ref{sub:step} and to a ramp disturbance in section \ref{sub:dist}.
     \begin{table}[H]
         \centering
         \begin{tabular}{|m{1.5cm}|m{1.5cm}|m{1.5cm}|m{1.5cm}|m{1.5cm}|m{1.5cm}|m{1.5cm}|m{1.5cm}|} 
@@ -71,7 +71,78 @@
         \end{tabular}
         \caption{System Response} \label{table:respData}
     \end{table}
-    \subsection{Time Domain}
+
+    \subsection{Time Domain - Step Response} \label{sub:step}
+    The values shown in table \ref{table:respData} were calculated from the closed loop transfer function of the system model. The ideal step response from matlab was then compared to experimental data from the TDS. This experimental data was collected by adjusting the $K_p$ and $K_I$ values in Labview and saving the response data to a text file.\textcolor{red}{reference to transfer function or system model}
+    \begin{figure}[H]
+        \centering
+        \begin{minipage}{.5\textwidth}
+            \centering
+            \includegraphics[scale=.4]{stepM1_T1}
+            \caption{Step Response test1}
+            \label{fig:stepM1_T1}
+        \end{minipage}%
+        \begin{minipage}{.5\textwidth}
+            \centering
+            \includegraphics[scale=.4]{stepM1_T2}
+            \caption{Step Response test2}
+            \label{fig:stepM1_T2}
+        \end{minipage}%
+    \end{figure}
+    \begin{figure}[H]
+        \centering
+        \begin{minipage}{.5\textwidth}
+            \centering
+            \includegraphics[scale=.4]{stepM1_T3}
+            \caption{Step Response test3}
+            \label{fig:stepM1_T3}
+        \end{minipage}%
+        \begin{minipage}{.5\textwidth}
+            \centering
+            \includegraphics[scale=.4]{stepM1_T4}
+            \caption{Step Response test4}
+            \label{fig:stepM1_T4}
+        \end{minipage}%
+    \end{figure}
+    \begin{figure}[H]
+        \centering
+        \begin{minipage}{.5\textwidth}
+            \centering
+            \includegraphics[scale=.4]{stepM1_T5}
+            \caption{Step Response test5}
+            \label{fig:stepM1_T5}
+        \end{minipage}%
+        \begin{minipage}{.5\textwidth}
+            \centering
+            \includegraphics[scale=.4]{stepM1_T6}
+            \caption{Step Response test6}
+            \label{fig:stepM1_T6}
+        \end{minipage}%
+    \end{figure}
+    \noindent Figures \ref{fig:stepM1_T1} through \ref{fig:stepM1_T6} show the plots of the matlab data and the collected experimental data. From this information it is possible to calculate the actual rise time and overshoot of the system for different $K_I$ and $K_p$ values. Table \ref{table:actualStep} shows the calculated $t_r$ and $M_p$.
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{|m{2cm}|m{2cm}|m{2cm}|m{2cm}|} 
+            \hline
+            matlab $t_r$ & actual $t_r$ & matlab $M_p$ & actual $M_p$ \\ 
+            \hline
+            0.275 & 0 & 16.646 & 0 \\ 
+            \hline
+            0.09 & 0 & 19.58 & 0 \\ 
+            \hline
+            0.085 & 0 & 16.23 & 0 \\ 
+            \hline
+            0.039 & 0 & 14.67 & 0 \\ 
+            \hline
+            0.038 & 0 & 13.63 & 0 \\ 
+            \hline
+            0.025 & 0 & 3.916 & 0 \\ 
+            \hline
+        \end{tabular}
+        \caption{$t_r$ and $M_p$ Comparison} \label{table:stepComp}
+    \end{table}
+
+    \subsection{Time Domain - Disturbance} \label{sub:dist}
 
     \subsection{Frequency Domain}
 
