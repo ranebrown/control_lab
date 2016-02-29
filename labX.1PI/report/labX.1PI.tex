@@ -29,19 +29,48 @@
 \newpage
 
 \section{Description}
-    This lab will further explore the Torsional Disc System. The system setup will be similiar to what was used in labX.1P; only the bottom disc of the TDS will used and the four weights will be set at a radius of 6.5cm.
+    This lab will further explore the Torsional Disc System. The system setup will be similar to what was used in labX.1P; only the bottom disc of the TDS will used and the four weights will be set at a radius of 6.5cm.
 
 \section{System Model}
     \subsection{Calculated Parameters}
 
     \subsection{Transfer Functions}
 
-\section{Matlab Analysis}
+\section{Matlab Analysis}\label{sec:mat_anys}
     \subsection{Time Domain}
 
     \subsection{Frequency Domain}
 
 \section{Experimental Analysis}
+    After conducting the matlab analysis in section \ref{sec:mat_anys} experimental data was collected from two different torsion disc systems. Data was collected from two systems in order to examine the robustness of the PI controller and make any necessary adjustments.
+    \subsection{Setup}
+    The first step in collecting experimental data was to select a rise time ($t_r$) and overshoot ($M_p$) for the system. As an initial starting point values of $t_r = 0.5$ sec and $M_p = 5\%$ were selected. Using these values the damping $\zeta$ and natural frequency $\omega_n$ were calculated using equations \ref{eq:zeta} and \ref{eq:omega}
+    \begin{align}
+        \zeta &= \frac{|\ln(0.05)|}{\sqrt{\pi^2+[ln(0.05)]^2}} = 0.69 \label{eq:zeta} \\[1em]
+        \omega_n &= \frac{1.8}{0.5} = 3.6 \label{eq:omega}
+    \end{align}
+    These values were used as an initial starting point and adjustments were made based on the response calculated in matlab and the corresponding response on the TDS. In cases where the overshoot became too high the damping was increased. It also became necessary to increase the bandwidth of the system in order to reduce the noise on the live system. Table \ref{table:respData} shows the various calculated values based on necessary changes. For each iteration the value in bold was adjusted to improve the response.
+    \begin{table}[H]
+        \centering
+        \begin{tabular}{|m{1.5cm}|m{1.5cm}|m{1.5cm}|m{1.5cm}|m{1.5cm}|m{1.5cm}|m{1.5cm}|m{1.5cm}|} 
+            \hline
+            Test & $M_p$ & $t_r$ & $\zeta$ & $\omega_n$ & $K_p$ & $K_I$ & $BW$ \\ 
+            \hline
+            test1 & \textbf{5.00} & \textbf{0.50} & 0.69 & 3.60 & 0.1548 & 0.4611 & 6.55 \\
+            \hline
+            test2 & 19.58 & 0.090 & 0.69 & \textbf{10} & 0.469 & 3.558 & 19.55 \\
+            \hline
+            test3 & 16.23 & 0.085 & \textbf{0.80} & 10 & 0.5472 & 3.558 & 20.948 \\
+            \hline
+            test4 & 14.67 & 0.039 & \textbf{0.90} & \textbf{20} & 1.258 & 14.23 & 45.59 \\
+            \hline
+            test5 & 13.63 & 0.038 & \textbf{0.95} & 20 & 1.329 & 14.23 & 47.00 \\
+            \hline
+            test6 & 13.92 & 0.025 & 0.95 & \textbf{30} & 2.006 & 32.018 & 71.08 \\
+            \hline
+        \end{tabular}
+        \caption{System Response} \label{table:respData}
+    \end{table}
     \subsection{Time Domain}
 
     \subsection{Frequency Domain}
