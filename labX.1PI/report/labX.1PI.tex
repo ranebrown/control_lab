@@ -194,6 +194,8 @@
         \label{fig:distm4}
     \end{figure} 
 
-\section{PI Controller Design}
+\section{PI Controller Design Summary}
+    Designing a PI controller is a complex and iterative process as outlined in the above sections. Analyzing a model of they system using matlab is a starting point that can provide some useful information. For example, viewing the various transfer functions helps to provide a baseline for the expected response to different inputs and disturbances. Calculated system parameters such as overshoot, rise time, natural frequency, and damping provide initial $K_p$ and $K_I$ values. On the actual TDS the response varies from the simulation due to variables that are not present in the ideal model. Iteratively updating system values gradually improves the system response but a PI controller is not sufficient to eliminate all undesirable characteristics. Further labs will explore more complex controllers which will continue to improve the response characteristics.
+
 
 \end{document}
