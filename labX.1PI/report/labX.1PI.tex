@@ -34,7 +34,7 @@
 \section{System Model}
     \subsection{Calculated Parameters}
 
-    \subsection{Transfer Functions}
+    \subsection{Transfer Functions} \label{sec:tf}
 
 \section{Matlab Analysis}\label{sec:mat_anys}
     \subsection{Time Domain}
@@ -180,6 +180,19 @@
     \noindent The overshoot amounts for the proportional integral controller quickly become large. Even with maximum damping it was not possible to reduce the overshoot by the desired amount. This large overshoot was partly due to increasing the natural frequency to reduce the steady state noise. With more iterations and experiments it would be possible to get a slightly better response.
 
     \subsection{Time Domain - Disturbance} \label{sub:dist}
+    Another important aspect of of designing the PI controller was viewing the response of the system to a ramp disturbance. As shown from the transfer functions and calculations in section \ref{sec:tf} there should be a constant steady state error to a ramp disturbance. As seen in figures \ref{fig:distm1} and \ref{fig:distm4} there is a constant error to a ramp disturbance on the physical system as expected. In the plots the response with no disturbance is shown in blue and the response to the ramp disturbance is shown in orange.
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale=.5]{m1dist}
+        \caption{Ramp Distrubance m1}
+        \label{fig:distm1}
+    \end{figure} 
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale=.5]{m4dist}
+        \caption{Ramp Distrubance m4}
+        \label{fig:distm4}
+    \end{figure} 
 
 \section{PI Controller Design}
 
