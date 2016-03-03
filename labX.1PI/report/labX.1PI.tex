@@ -157,11 +157,11 @@
     	If, for instance, we choose desired values of $t_r<1 sec$, $t_s < 5 sec$, and $M_p<10\%$, we can estimate suitable $\omega_n$ and $\zeta$ for $H_{yr}(s)$ by hand calculation, then model the system in Matlab. Iterating on the design in Matlab allows us to fine-tune the controller, which we can then evaluate on the physical system.\\
 	\textcolor{red}{discuss/plot all the other transfer functions!!!}
 	
-	The specifications above results in the values $\omega_n = , \hspace{1cm} \zeta= $ which gives values $k_i= , k_p= $. This results in the system transfer function $H_{yr}(s) = $. The plot for $H_{yr}(s)$ is given below.
+	The specifications above results in the values $\omega_n = , \hspace{1cm} \zeta= $ which gives values $k_I= , k_p= $. This results in the system transfer function $H_{yr}(s) = $. The step response plot for $H_{yr}(s)$ is given below.
 	
 	\textcolor{red}{add plot here}
 	
-	From the above plot, we can see that the additional zero results in a greater overshoot and overall faster response. The plots of the other three transfer functions of interest are included below. \textcolor{red}{add other TF plots here}
+	The additional zero results in a greater overshoot and overall faster response. The plots of the other three transfer functions of interest are included below. \textcolor{red}{add other TF plots here}
 	
 	We can further refine our design in order to get a better time domain response from our system, now that we have observed the effect of the additional zero in Matlab simulations. \textcolor{red}{include one more iteration, with better params which worked for the exp sys.}
 	
@@ -169,7 +169,7 @@
     	In addition to time domain specifications, certain aspects of a system's frequency domain response are important to take into consideration to ensure the stability and good performance of that system. These values are the steady-state error, $e_{ss}$, the phase margin $PM$, the gain margin $GM$, and the bandwidth,, which gives us the system's half-power frequency. $e_{ss}$ and  $\omega_{BW}$ are important for system performance. $PM$, and $GM$ ensure stability of the system, with $45<PM<60$ an ideal region for the phase margin, $GM>__$ a good goal for gain margin. 
 	
 	We can plot the frequency response of our first system () and analyze the stability and performance of the system. Note that we have \\
-	$PM=__$, $GM=__$, \omega_{BW}=_$, and $e_{ss}=__$. \textcolor{red}{discuss what these mean, then do an iteration using freq plots. FINALLY, put all of these together into a system that has good time and freq response characteristics in Matlab. Make sure for this system you plot several other transfer functions as well - use one that may have performed well on the TDS itself.}
+	$PM=__$, $GM=__$, \omega_{BW}=_$, and $e_{ss}=__$. \textcolor{red}{discuss what these mean, then do an iteration using freq plots. FINALLY, put all of these together into a system that has good time and freq response characteristics in Matlab. Make sure for this system you plot several other transfer functions as well - use one that may have performed well on the TDS itself - then add in $+-10-\%$ on the J value and discuss how that worked out.}
 	 
 \section{Experimental Analysis}
     \subsection{Time Domain}
