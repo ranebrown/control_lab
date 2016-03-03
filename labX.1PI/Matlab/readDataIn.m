@@ -23,3 +23,9 @@ data.m4t2=dlmread(['data' fs 'machine4_test2.txt']);
 data.m4t3=dlmread(['data' fs 'machine4_test3.txt']);
 data.m4t4=dlmread(['data' fs 'machine4_test4.txt']);
 data.m4t5=dlmread(['data' fs 'machine4_test5.txt']);
+
+% disturbance data
+data.m10dist=dlmread(['data' fs 'machine1_0dist_t3.txt']);
+data.m1Rdist=dlmread(['data' fs 'machine1_rampdist_t3.txt']);
+data.m40dist=dlmread(['data' fs 'machine4_0dist_t3.txt']);
+data.m4Rdist=dlmread(['data' fs 'machine4_rampdist_t3.txt']);
