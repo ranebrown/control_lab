@@ -108,20 +108,20 @@
     Where $J=\mbox{ total system inertia}$, $c=\mbox{ system drag}$, $k_h=\mbox{ hardware gain}$, and $T_d=\mbox{ time delay}$.
     In this lab, we use a PI controller, $C(s)=\frac{k_I}{s}+k_p$. \\
     
+    \textcolor{red}{include info from sheet on these and what they tell us!! Then add plots!!}
     There are multiple transfer functions which are of interest in our system. The first transfer function of interest is the closed-loop transfer function from reference input $R$ to output $Y$:
 	\begin{equation}
-		H_{yr}=\frac{Y}{R}=\frac{CP}{1+CP}
+		H_{yr}=\frac{Y}{R}=\frac{CP}{1+CP}=\frac{kk_I+kk_ps}{Js^2+(c+kk_p)s+kk_I}
 	\end{equation}
-		
-	When we substitute in the equations for $P(s)$ and $C(S)$, we get
-	\begin{equation}
-		H_{yr}(s)=\frac{C_{PI}P}{1+C_{PI}P}=\frac{kk_i+kk_ps}{Js^2+(c+kk_p)s+kk_I}
-	\end{equation}
+	
+	From the equation for $H_{yr}$, we can see that the DC gain of this transfer function is 1, as we would expect \textcolor{red}{because...}.
 	
 	Another transfer function of interest is the closed-loop transfer function from reference input $R(s)$ to controller output $U(s)$.
 	\begin{align}
 		H_{ur}&=\frac{U}{R}=\frac{C}{1+CP}=\frac{Jck_Ik_ps^3+Jk_Is^2+ck_Is}{Js^2+(c+kk_p)s+kk_I}
 	\end{align}
+	
+	This transfer function has a DC gain of  $H_{ur}(0)=\frac{c}{k}$. This value represents the input that is needed to compensate parameter $c$ in steady state. 
 		
 	We can also look at the transfer function from the disturbance $D(s)$ to the output $Y(s)$, since again, rejecting disturbance input such as hills and bumps is important in a cruise control system.
 	\begin{equation}
@@ -154,10 +154,23 @@
     
     	However, when using these estimates, we must keep in mind that our PI controller also introduces an additional zero to the closed-loop transfer function $H_{yr}(s)$ which will affect the time domain response of our system. Most notably this zero will increase $M_p$ and decreasing $t_r$. Thus, design must aim for a larger $\zeta$, while $\omega_n$ can be decreased slightly and still meet rise time specifications. \\
     
-    	If, for instance, we choose desired values of $t_r<1 sec$, $t_s < 5 sec$, and $M_p<10\%$, we can estimate suitable $\omega_n$ and $\zeta$ by hand calculation, then model the system in Matlab. Iterating on the design in Matlab allows us to fine-tune the controller, which we can then evaluate on the physical system.
+    	If, for instance, we choose desired values of $t_r<1 sec$, $t_s < 5 sec$, and $M_p<10\%$, we can estimate suitable $\omega_n$ and $\zeta$ for $H_{yr}(s)$ by hand calculation, then model the system in Matlab. Iterating on the design in Matlab allows us to fine-tune the controller, which we can then evaluate on the physical system.\\
 	\textcolor{red}{discuss/plot all the other transfer functions!!!}
+	
+	The specifications above results in the values $\omega_n = , \hspace{1cm} \zeta= $ which gives values $k_i= , k_p= $. This results in the system transfer function $H_{yr}(s) = $. The plot for $H_{yr}(s)$ is given below.
+	
+	\textcolor{red}{add plot here}
+	
+	From the above plot, we can see that the additional zero results in a greater overshoot and overall faster response. The plots of the other three transfer functions of interest are included below. \textcolor{red}{add other TF plots here}
+	
+	We can further refine our design in order to get a better time domain response from our system, now that we have observed the effect of the additional zero in Matlab simulations. \textcolor{red}{include one more iteration, with better params which worked for the exp sys.}
+	
     \subsection{Frequency Domain}
-$e_{ss}, PM, GM$
+    	In addition to time domain specifications, certain aspects of a system's frequency domain response are important to take into consideration to ensure the stability and good performance of that system. These values are the steady-state error, $e_{ss}$, the phase margin $PM$, the gain margin $GM$, and the bandwidth,, which gives us the system's half-power frequency. $e_{ss}$ and  $\omega_{BW}$ are important for system performance. $PM$, and $GM$ ensure stability of the system, with $45<PM<60$ an ideal region for the phase margin, $GM>__$ a good goal for gain margin. 
+	
+	We can plot the frequency response of our first system () and analyze the stability and performance of the system. Note that we have \\
+	$PM=__$, $GM=__$, \omega_{BW}=_$, and $e_{ss}=__$. \textcolor{red}{discuss what these mean, then do an iteration using freq plots. FINALLY, put all of these together into a system that has good time and freq response characteristics in Matlab. Make sure for this system you plot several other transfer functions as well - use one that may have performed well on the TDS itself.}
+	 
 \section{Experimental Analysis}
     \subsection{Time Domain}
 
