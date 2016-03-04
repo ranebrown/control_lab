@@ -2,6 +2,7 @@
 \usepackage{fullpage}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{gensymb}
 \usepackage{color}
 \usepackage{graphicx}
 \graphicspath{ {images/} }
@@ -70,7 +71,7 @@
             \caption{Torsional Disc System Parameters} \label{table:TDS_param}
         \end{table}
         
-        For a radius of 7.5 cm, the calculated total system inertia $J$ is 0.0128 $kg m^2$.
+        For a radius of 6.5 cm, the calculated total system inertia $J$ is 0.0128 $kg m^2$.
         
         For this experiment, our cruise control system was designed using the calculated parameters from Torsional Disc System 1 (in bold in the above table), and the PI controller was tested on TDS systems 1 and 4.
 
@@ -109,29 +110,28 @@
     Where $J=\mbox{ total system inertia}$, $c=\mbox{ system drag}$, $k_h=\mbox{ hardware gain}$, and $T_d=\mbox{ time delay}$.
     In this lab, we use a PI controller, $C(s)=\frac{k_I}{s}+k_p$. \\
     
-    \textcolor{red}{include info from sheet on these and what they tell us!! Then add plots!!}
     There are multiple transfer functions which are of interest in our system. The first transfer function of interest is the closed-loop transfer function from reference input $R$ to output $Y$:
 	\begin{equation}
-		H_{yr}=\frac{Y}{R}=\frac{CP}{1+CP}=\frac{kk_I+kk_ps}{Js^2+(c+kk_p)s+kk_I}
+		H_{yr}=\frac{Y}{R}=\frac{CP}{1+CP}=\frac{\frac{K}{J}(k_ps+k_I)}{s^2+(\frac{c}{J}k_p+\frac{c}{J})s+\frac{k}{J}k_I}
 	\end{equation}
 	
-	From the equation for $H_{yr}$, we can see that the DC gain of this transfer function is 1, as we would expect \textcolor{red}{because...}.
+	From the equation for $H_{yr}$, we can see that the DC gain of this transfer function is 1, as is to be expected for this system.
 	
-	Another transfer function of interest is the closed-loop transfer function from reference input $R(s)$ to controller output $U(s)$.
+	A second transfer function of interest is the closed-loop transfer function from reference input $R(s)$ to controller output $U(s)$.
 	\begin{align}
-		H_{ur}&=\frac{U}{R}=\frac{C}{1+CP}=\frac{Jck_Ik_ps^3+Jk_Is^2+ck_Is}{Js^2+(c+kk_p)s+kk_I}
+		H_{ur}&=\frac{U}{R}=\frac{C}{1+CP}=\frac{(k_ps+k_I)(s+\frac{c}{J})}{s^2+(\frac{c}{J}k_p+\frac{c}{J})s+\frac{k}{J}k_I}
 	\end{align}
 	
-	This transfer function has a DC gain of  $H_{ur}(0)=\frac{c}{k}$. This value represents the input that is needed to compensate parameter $c$ in steady state. 
+	This transfer function has a DC gain of  $H_{ur}(0)=\frac{c}{k}$. This value represents the input that is needed to compensate parameter $c$ in steady state. \\
 		
 	We can also look at the transfer function from the disturbance $D(s)$ to the output $Y(s)$, since again, rejecting disturbance input such as hills and bumps is important in a cruise control system.
 	\begin{equation}
-		H_{yd}=\frac{Y}{D}=\frac{\frac{k}{J}s}{s^2+(\frac{c}{J}+\frac{k_pk}{J}s)+\frac{k}{J}k_I}
+		H_{yd}=\frac{Y}{D}=\frac{P}{1+CP}=\frac{\frac{k}{J}s}{s^2+(\frac{c}{J}+\frac{k_pk}{J}s)+\frac{k}{J}k_I}
 	\end{equation}
 	
 	The final closed-loop transfer function of interest is $H_{ud}$, the transfer function from the disturbance $D(s)$ to the controller output $U(s)$. 
 	\begin{equation}
-		H_{ud}=\frac{-\frac{k}{J}(k_ps+k_I)}{s^2+(\frac{c}{J}-\frac{kk_p}{J})s+\frac{kk_I}{J}}
+		H_{ud}=\frac{U}{D}=\frac{-CP}{1-CP}=\frac{-\frac{k}{J}(k_ps+k_I)}{s^2+(\frac{c}{J}-\frac{kk_p}{J})s+\frac{kk_I}{J}}
 	\end{equation}	
 		
 	We will also examine the open-loop transfer function $L(s)=P(s)C(s)$, which will be useful in determining gain and phase margins of our system to ensure stability.
@@ -146,32 +146,132 @@
 	    Before implementing our PI controller on a physical TDS, we can formulate and test the design in Matlab to ensure the system meets certain time and frequency domain specifications. In the time domain, relevant specifications include rise time $t_r$, settling time $t_s$, and overshoot $M_p$. Choosing desired ranges for these parameters allows us to estimate $\zeta$ and $\omega_{n}$ for a simple second-order system of the form
 	    
 	    \begin{equation}
-	    	\frac{K\omega_n^2}{s^2+2\zeta \omega_ns+\omega_{n}^2}
+	    	G(s)=\frac{K\omega_n^2}{s^2+2\zeta \omega_ns+\omega_{n}^2}
 	    \end{equation}
 	    
-	    with the relationships 
 	    \begin{equation}
 	    	t_r = \frac{1.8}{\omega_n}, \hspace{1cm} t_s=\frac{4.6}{\zeta\omega_n},  \hspace{1cm}  M_p=e^{\frac{-\pi \zeta}{\sqrt{1-\zeta^2}}}
 	    \end{equation}
     
-    	However, when using these estimates, we must keep in mind that our PI controller also introduces an additional zero to the closed-loop transfer function $H_{yr}(s)$ which will affect the time domain response of our system. Most notably this zero will increase $M_p$ and decreasing $t_r$. Thus, design must aim for a larger $\zeta$, while $\omega_n$ can be decreased slightly and still meet rise time specifications. \\
+    	However, when using these estimates, we had to keep in mind that our PI controller also introduces an additional zero to the closed-loop transfer function $H_{yr}(s)$ which affects the time domain response of our system. Most notably this zero increases $M_p$ and decreases $t_r$. Thus, our design aimed for a larger $\zeta$, while $\omega_n$ could be decreased slightly while still meeting rise time specifications.\\
     
-    	If, for instance, we choose desired values of $t_r<1 sec$, $t_s < 5 sec$, and $M_p<10\%$, we can estimate suitable $\omega_n$ and $\zeta$ for $H_{yr}(s)$ by hand calculation, then model the system in Matlab. Iterating on the design in Matlab allows us to fine-tune the controller, which we can then evaluate on the physical system.\\
-	\textcolor{red}{discuss/plot all the other transfer functions!!!}
+    	We first chose desired values of $t_r=0.5$ sec, and $M_p=5\%$, and estimated suitable $\omega_n$ and $\zeta$ for $H_{yr}(s)$ by hand calculation, then modeled the system in Matlab. Iterating on the design in Matlab allowed us to fine-tune the controller, which was then evaluated on the physical system. The specifications above result in the values $\omega_n=3.6, \hspace{0.1cm} \zeta=0.69 $ which give $k_I=0.4611 , k_p=0.1548$. The step response plot for the resulting closed loop system $H_{yr}$ is given below, as well as plots of the step responses of $H_{er}$, $H_{yd}$, and $H_{ur}$.
 	
-	The specifications above results in the values $\omega_n = , \hspace{1cm} \zeta= $ which gives values $k_I= , k_p= $. This results in the system transfer function $H_{yr}(s) = $. The step response plot for $H_{yr}(s)$ is given below.
+	\begin{figure}[H]
+        \centering
+        \begin{minipage}{.5\textwidth}
+            \centering
+            \includegraphics[scale=.18]{Hyr_step1_mat}
+            \caption{Step Response for $H_{yr}$}
+            \label{fig:Hyr_step1_mat}
+        \end{minipage}%
+        \begin{minipage}{.5\textwidth}
+            \centering
+            \includegraphics[scale=.18]{Her_step1_mat}
+            \caption{Step Response for $H_{er}$}
+            \label{fig:Her_step1_mat}
+        \end{minipage}%
+    \end{figure}
+    \begin{figure}[H]
+        \centering
+        \begin{minipage}{.5\textwidth}
+            \centering
+            \includegraphics[scale=.18]{Hyd_step1_mat}
+            \caption{Step Response for $H_{yd}$}
+            \label{fig:Hyd_step1_mat}
+        \end{minipage}%
+        \begin{minipage}{.5\textwidth}
+            \centering
+            \includegraphics[scale=.18]{Hur_step1_mat}
+            \caption{Step Response for $H_{ur}$}
+            \label{fig:Hur_step1_mat}
+        \end{minipage}%
+    \end{figure}
+
 	
-	\textcolor{red}{add plot here}
+	The additional zero results in a greater overshoot for $H_{yr}(s)$ and overall faster response than was predicted by hand calculation for all system transfer functions. In fact for $H_{yr}$, the specifications as calculated in Matlab are 
+	\begin{align*}
+		t_r = 0.2749,\hspace{0.2cm} t_s=1.3725 s, \hspace{0.2cm} M_p=16.649\%
+	\end{align*}
 	
-	The additional zero results in a greater overshoot and overall faster response. The plots of the other three transfer functions of interest are included below. \textcolor{red}{add other TF plots here}
+	While rise time is within our specifications, overshoot ($M_p$) is unacceptable. We can further refine our design (by choosing a greater damping ratio, for instance) now that we have observed the effect of the additional zero in Matlab simulations. For the next iteration, we try choosing $k_p=0.233$ (and keep $k_I=0.4611$) to increase the damping ratio ($\zeta$). The resulting time domain plots are included below.
 	
-	We can further refine our design in order to get a better time domain response from our system, now that we have observed the effect of the additional zero in Matlab simulations. \textcolor{red}{include one more iteration, with better params which worked for the exp sys.}
+     \begin{figure}[H]
+        \centering
+        \begin{minipage}{.5\textwidth}
+            \centering
+            \includegraphics[scale=.18]{Hyr_step2_mat}
+            \caption{Step Response 2 for $H_{yr}$}
+            \label{fig:Hyr_step2_mat}
+        \end{minipage}%
+        \begin{minipage}{.5\textwidth}
+            \centering
+            \includegraphics[scale=.18]{Her_step2_mat}
+            \caption{Step Response 2 for $H_{er}$}
+            \label{fig:Her_step2_mat}
+        \end{minipage}%
+    \end{figure}
+    \begin{figure}[H]
+        \centering
+        \begin{minipage}{.5\textwidth}
+            \centering
+            \includegraphics[scale=.18]{Hyd_step2_mat}
+            \caption{Step Response 2 for $H_{yd}$}
+            \label{fig:Hyd_step2_mat}
+        \end{minipage}%
+        \begin{minipage}{.5\textwidth}
+            \centering
+            \includegraphics[scale=.18]{Hur_step2_mat}
+            \caption{Step Response 2 for $H_{ur}$}
+            \label{fig:Hur_step2_mat}
+        \end{minipage}%
+    \end{figure}
+	
+	Unfortunately, even while iterating within Matlab, we cannot meet the specification for overshoot requirement. The only two knobs we can adjust to place the poles of our system are $k_p$ and $k_I$, and we cannot achieve $M_p<5\%$ without causing the system to be overdamped. The second iteration of our system produced the specifications 
+	\begin{align*}
+		t_r = 0.2369,\hspace{0.2cm} t_s=1.4108 s, \hspace{0.2cm} M_p=9.1959\%
+	\end{align*}
+	
+	While this is an improvement over our first attempt at designing the controller, we still need more fine-grain control to achieve the specifications that define a precise and robust cruise control system. We can also simulate the system's response to different inertias. This was simulated for the second iteration of the controller in Matlab with system inertia $J\pm10\%$, and the plots of the step response of $H_{yr}$ are included below. 
+	
+	    \begin{figure}[H]
+        \centering
+        \begin{minipage}{.5\textwidth}
+            \centering
+            \includegraphics[scale=.18]{Hyr_stepPlus10_mat}
+            \caption{Step Response for $J+10\%$}
+            \label{fig:Hyr_stepPlus10_mat}
+        \end{minipage}%
+        \begin{minipage}{.5\textwidth}
+            \centering
+            \includegraphics[scale=.18]{Hyr_stepMinus10_mat}
+            \caption{Step Response for $J+10\%$}
+            \label{fig:Hyr_stepMinus10_mat}
+        \end{minipage}%
+    \end{figure}
+	
+	Rise time remained within the specification ($t_r<0.5$ sec) while overshoot varied by $\pm1.2\%$.
 	
     \subsection{Frequency Domain}
-    	In addition to time domain specifications, certain aspects of a system's frequency domain response are important to take into consideration to ensure the stability and good performance of that system. These values are the steady-state error, $e_{ss}$, the phase margin $PM$, the gain margin $GM$, and the bandwidth,, which gives us the system's half-power frequency. $e_{ss}$ and  $\omega_{BW}$ are important for system performance. $PM$, and $GM$ ensure stability of the system, with $45<PM<60$ an ideal region for the phase margin, $GM>$ a good goal for gain margin. 
+    	In addition to time domain specifications, certain aspects of a system's frequency domain response are important to take into consideration to ensure the stability and good performance of that system. These values are the phase margin $PM$, the gain margin $GM$, and the bandwidth $\omega_{WB}$, which gives the system's half-power frequency. $\omega_{BW}$ is important for system performance and reducing output noise. $PM$, and $GM$ ensure stability of the system, with $45<PM<60$ an ideal region for the phase margin, $GM>6dB$ a good goal for gain margin. 
 	
-	We can plot the frequency response of our first system () and analyze the stability and performance of the system. Note that we have 
-	$PM=$, $GM=$, $\omega_{BW}=$, and $e_{ss}=$. \textcolor{red}{discuss what these mean, then do an iteration using freq plots. FINALLY, put all of these together into a system that has good time and freq response characteristics in Matlab. Make sure for this system you plot several other transfer functions as well - use one that may have performed well on the TDS itself - then add in $+-10-\%$ on the J value and discuss how that worked out.}
+	Plotting the frequency response of our first system ($k_I=0.4611, k_p=0.1548$) allows us to further comment on the stability and performance of the system. 
+	\begin{figure}[H]
+        \centering
+        \includegraphics[scale=.3]{Hyr_freq1_bode}
+        \caption{Frequency response for Matlab simulation 1}
+        \label{fig:Hyr_freq1_bode}
+    \end{figure} 
+    This system has $GM=\inf$, $PM=129\degree$, $\omega_{BW}=6.55$ rad. 
+    
+    For our second system ($k_I=0.4611, k_p=0.233$) 
+    \begin{figure}[H]
+        \centering
+        \includegraphics[scale=.3]{Hyr_freq2_bode}
+        \caption{Frequency response for Matlab simulation 2}
+        \label{fig:Hyr_freq2_bode}
+    \end{figure} 
+    This system has $GM=\inf$, and a slightly higher phase margin and bandwidth: $PM=146\degree$, and$\omega_{BW}=7.93$ rad. 
 	 
 \section{Experimental Analysis}
     After conducting the matlab analysis in section \ref{sec:mat_anys} experimental data was collected from two different torsion disc systems. Data was collected from two systems in order to examine the robustness of the PI controller and make any necessary adjustments.
@@ -316,13 +416,13 @@
     \begin{figure}[H]
         \centering
         \includegraphics[scale=.5]{m1dist}
-        \caption{Ramp Distrubance m1}
+        \caption{Ramp Disturbance m1}
         \label{fig:distm1}
     \end{figure} 
     \begin{figure}[H]
         \centering
         \includegraphics[scale=.5]{m4dist}
-        \caption{Ramp Distrubance m4}
+        \caption{Ramp Disturbance m4}
         \label{fig:distm4}
     \end{figure} 
 
