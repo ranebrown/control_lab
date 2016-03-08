@@ -21,4 +21,18 @@ z = abs(log(Mp))/sqrt(pi^2+log(Mp)^2);          % damping
 PM = atand(2*z/(sqrt(-2*z^2+sqrt(1+4*z^4))));   % phase margin
 
 % calculate needed phase lead to meet specifications
+[Gm, Pm, Wgm, Wpm] = margin(ol*K);
+PL = PM+10 - Pm;                               % phase lead plus 10 deg safety margin
 
+% calculate alpha value
+% a single stage lead compensator should not have alpha value < 0.1
+a = (1-sind(PL))/(1+sind(PL));
+
+% find compensated gain crossover freq
+m = -1*10*log10(1/a);
+w = getGainCrossover(ol*K,db2mag(m));
+
+% calculate zc and pc for lead compensator
+zc = w*sqrt(a);
+pc = zc/a;
+L = [ 1/a * (s+zc)/(s+pc) ];
