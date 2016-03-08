@@ -1,4 +1,5 @@
 torsional-interface/
+*.db
 
 # Compiled Object files
 *.slo
