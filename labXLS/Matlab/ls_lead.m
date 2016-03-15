@@ -36,3 +36,9 @@ w = getGainCrossover(ol*K,db2mag(m));
 zc = w*sqrt(a);
 pc = zc/a;
 L = [ 1/a * (s+zc)/(s+pc) ];
+
+% closed loop TF
+cl = feedback(ol*K*L,1);
+
+% discrete time tf for labview
+LD = c2d(L*K*1/s,.01,'tustin');
