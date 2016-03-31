@@ -57,7 +57,7 @@ WA = [ ws.*ts.^2/2   ws.*ts   ws ];
 
 WA_W = WA \ Ws;
 
-figure(8), plot(ts, WA_W'), grid on, zoom on%comment out
+%figure(8), plot(ts, WA_W'), grid on, zoom on%comment out
 
 % impulse responses (flipped for convolution)
 
