@@ -28,20 +28,18 @@ wo = 2*pi;
 % equations to describe model
 u = u0 + u1a*cos(wo*t.f1) + u1b*sin(wo*t.f1);
 w1  = w_10 + w_11a*cos(wo*t.f1) + w_11b*sin(wo*t.f1);
-w1D = diff(w1);
+w1D = -w_11a*sin(wo*t.f1) + w_11b*cos(wo*t.f1);
 w2  = w_20 + w_21a*cos(wo*t.f1) + w_21b*sin(wo*t.f1);
-w2D = diff(w2);
+w2D = -w_21a*sin(wo*t.f1) + w_21b*cos(wo*t.f1);
 th1 = th_10 + w_10*t.f1 + w_11a*sin(wo*t.f1)/wo - w_11b*cos(wo*t.f1)/wo;
 th2 = th_20 + w_20*t.f1 + w_21a*sin(wo*t.f1)/wo - w_21b*cos(wo*t.f1)/wo;
 
 % least squares solutions
 A1 = [w1 (th1 - th2) -u];
-A1 = A1(2:1001,:); % account for lost constant term
 b1 = [-J1*w1D];
 x1 = A1\b1;
 
 A2 = [w2 (th2 - th1)];
-A2 = A2(2:1001,:); % account for lost constant term
 b2 = [-J2*w2D];
 x2 = A2\b2;
 
