@@ -40,12 +40,22 @@ w1_p = complex([w_11a.f1, w_11a.f2, w_11a.f3, w_11a.f4, w_11a.f5], -[w_11b.f1, w
 H_w1u = w1_p./u_p;
 mag = abs(H_w1u);
 magdb = mag2db(mag);
-phase = angle(H_w1u);
-% create plot
+phase = rad2deg(angle(H_w1u));
+% create magnitude plot
+figure
 semilogx(freq,magdb, 'o')
 set(gca,'xscale','log')
 grid on
-title('Experimental Bode Plot')
+title('Magnitude')
 xlabel('rad/sec')
 ylabel('mag db')
+legend('data points')
+% create phase plot
+figure
+semilogx(freq, phase, 'ro')
+set(gca,'xscale','log')
+grid on
+title('Phase')
+xlabel('rad/sec')
+ylabel('phase deg')
 legend('data points')
