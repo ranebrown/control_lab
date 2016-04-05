@@ -47,9 +47,6 @@ A2 = [w2 (th2 - th1)];
 b2 = [-J2*w2D];
 x2 = A2\b2;
 
-A3 = [w1 w2];
-b3 = [kh*u-(J1*w1+J2*w2)];
-x3 = A3\b3;
 
 % return values
 c1 = x1(1);
