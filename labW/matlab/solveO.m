@@ -3,7 +3,7 @@ function [om_10, w_10, w_11a, w_11b] = solveO(wo, t, bot)
 % solves: omega_1 = omega_0 + w_10*t + w_11a*(sin(wo*t))/wo -
 % w_11b*((cos(wo*t))/wo)
 
-A = [ones(size(t)), t, sin(wo*t)/wo, cos(wo*t)/wo];
+A = [ones(size(t)), t, sin(wo*t)/wo, -cos(wo*t)/wo];
 b = [bot];
 x = A\b;
 om_10 = x(1);
