@@ -1,0 +1,125 @@
+\documentclass[11pt,titlepage]{article}
+\usepackage{fullpage}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{gensymb}
+\usepackage[parfill]{parskip}
+\usepackage{color}
+\usepackage{bm}
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,positioning,calc}
+\usepackage{float}
+\restylefloat{table}
+\usepackage{array}
+\tikzset{
+    block/.style = {draw, fill=white, rectangle, minimum height=3em, minimum width=3em},
+    sum/.style = {draw, fill=white, circle, node distance=1cm},
+    input/.style = {draw=none},
+    output/.style = {draw=none},
+    coord/.style = {coordinate}
+}
+
+\author{Rane Brown \\ Kate Schneider}
+\title{ECEN 4638: Lab W2}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\listoffigures
+\listoftables
+\newpage
+
+\section{Description}
+	The goal of this lab is to design a controller and investigate the response of a two disc system when using $\omega_1$ for feedback and measurement versus using $\omega_2$. The key difference between these two methods is $\omega_1$ is collocated control while $\omega_2$ is non-collocated. We anticipate using $\omega_1$ will produce a more robust controller and during the course of this lab we will confirm or refute this prediction.
+
+\section{Setup}
+	For the following experiments we will arrange the TDS with the lower disc containing four weights at 6.5 cm and the middle disc with two weights at 6.5 cm. Using this setup the system parameters calculated from the methods described in Lab W are the following:
+	\begin{align*}
+		b &= 0.305 & k &= 2.55\\
+		c_1 &= 0.004 & c_2 &= 0.0016\\
+		J_1 &= 0.011475 & J_2 &= 0.0064375
+	\end{align*}
+
+\section{System model}
+	
+	\subsection{LTI model}	
+		The two disc torsional disc system can be modeled as an LTI system with the following equations:
+		\begin{align}
+			J_1\ddot \theta_1+c_1\dot \theta_1+k(\theta_1-\theta_2)&=bu \\
+			J_2\ddot \theta_2+c_2\dot \theta_2+k(\theta_2-\theta_1)&=0
+		\end{align}
+		 The difference in position of the discs, $\beta$ is also of interest, where $\beta = \theta_1-\theta_2$. If we make this substitution, as well as substituting in angular velocity $\omega$ for $\dot \theta$, our system becomes:
+		 \begin{align}
+		 	J_1\dot \omega_1+c_1\omega_1+k\beta=bu \\
+			J_2\dot \omega_2+c_2\omega_2-k\beta=0
+		 \end{align}
+	 
+	\subsection{State Space Representation}
+		Lab W2 will use the state space representation of the LTI model. State space methods are used because they are easier to manipulate when dealing with a system with multiple outputs such as the two disc TDS.
+		\begin{equation}
+			\begin{bmatrix}
+				\dot \omega_1\\
+				\dot \omega_2\\
+				\dot \beta
+			\end{bmatrix}=
+	  		\begin{bmatrix}
+	    		-\frac{c_1}{J_1} & 0 & -\frac{k}{J_1} \\
+		    	0 & -\frac{c_2}{J_2} & -\frac{k}{J_2}\\
+				1 & -1 & 0
+	  		\end{bmatrix}
+			\begin{bmatrix}
+				\omega_1\\
+				\omega_2\\
+				\beta
+			\end{bmatrix}+
+			\begin{bmatrix}
+				\frac{b}{J_1}\\
+				0\\
+				0
+			\end{bmatrix}
+		\end{equation}
+
+\section{Matlab Controller Design $\omega_1$}
+	
+	\subsection{Specifications $\omega_1$}
+		\begin{itemize}
+			\item rise time
+			\item overshoot
+			\item bandwidth
+		\end{itemize}
+
+	\subsection{Step Response $\omega_1$}
+
+	\subsection{Frequency Response $\omega_1$}
+
+\section{TDS Controller Implementation $\omega_1$}
+
+	\subsection{Step Response $\omega_1$}
+
+	\subsection{Frequency Response $\omega_1$}
+
+\section{Matlab Controller Design $\omega_2$}
+	
+	\subsection{Specifications $\omega_2$}
+		\begin{itemize}
+			\item rise time
+			\item overshoot
+			\item bandwidth
+		\end{itemize}
+
+	\subsection{Step Response $\omega_2$}
+
+	\subsection{Frequency Response $\omega_2$}
+
+\section{TDS Controller Implementation $\omega_2$}
+
+	\subsection{Step Response $\omega_2$}
+
+	\subsection{Frequency Response $\omega_2$}
+
+\section{Controller Comparison}
+
+\end{document}
