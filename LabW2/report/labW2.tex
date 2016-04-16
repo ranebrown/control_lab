@@ -102,19 +102,48 @@
 	\subsection{Frequency Response $\omega_1$}
 
 \section{Matlab Controller Design $\omega_2$}
-	
+
 	\subsection{Specifications $\omega_2$}
+		The first step in designing a controller that uses $\omega_2$ as the measurement was to select desired system parameters. Based on previous performance of the TDS we decided to select the following parameters.
 		\begin{itemize}
-			\item rise time
-			\item overshoot
-			\item bandwidth
+			\item rise time $< 1sec$
+			\item overshoot $< 15\%$
+			\item bandwidth $> 10 \frac{rad}{sec}$
 		\end{itemize}
 
+	\subsection{Sisotool}
+		After selecting these parameters and entering the system model into Matlab as a state space system we used sisotool to design a notch filter. Matlab's sisotool is very useful because it displays real time results of the controller and the poles and zeros can be adjusted on a root locus plot.
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale=0.4]{rlocusw2}
+			\caption{Root Locus $\omega_2$}
+		\end{figure}
+		As seen in the root locus plot this system goes unstable if the gain is increased too much. The reason for this is the pole excess in the $H_{u\omega_2}$ transfer function. It is difficult to design a controller that compensates for this excess since it is not possible to create an improper system. Adding additional zeros to the controller helps to stabilize the system but this would require being able to detect the future which is not possible.
+
 	\subsection{Step Response $\omega_2$}
+		The below figure shows the step response of the closed loop system when using the $\omega_2$ notch filter controller. This controller provides the following specifications:
+		\begin{align*}
+			\mbox{RiseTime: } &0.1512 & \mbox{SettlingTime: } &0.7404 & \mbox{SettlingMin: } &0.8862\\
+     		\mbox{SettlingMax: } &1.1231 & \mbox{Overshoot: } &16.2071 & \mbox{Undershoot: } &0\\
+     		\mbox{Peak: } &1.1231 & \mbox{PeakTime: } &0.3407 &
+        \end{align*}
+        The rise time meets the desired rise time of less than 1 second but the overshoot is slightly higher than desired. This is a compromise that we are willing to make.
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale=0.4]{stepw2}
+			\caption{Step Response $\omega_2$}
+		\end{figure}
 
 	\subsection{Frequency Response $\omega_2$}
+		From the bode plot we can see the system will have a relatively low bandwidth but it should meet our design requirements. There is also a section where the higher order system causes an undesirable peak. This could be further reduced with more controller iterations. Using Matlab we calculated the bandwidth to be 14.0037 rad/sec.
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale=0.4]{bodew2}
+			\caption{Bode Plot $\omega_2$}
+		\end{figure}
 
 \section{TDS Controller Implementation $\omega_2$}
+	After designing a controller using Matlab and viewing the ideal response values we tested the controller on the TDS system. There were two objectives during the tests. The first objective was to collect information on the step response using the $\omega_2$ controller. The second objective was to collect frequency information using a sinusoidal input in order to reconstruct an experimental bode plot to view the frequency response of the system.
 
 	\subsection{Step Response $\omega_2$}
 
