@@ -146,8 +146,27 @@
 	After designing a controller using Matlab and viewing the ideal response values we tested the controller on the TDS system. There were two objectives during the tests. The first objective was to collect information on the step response using the $\omega_2$ controller. The second objective was to collect frequency information using a sinusoidal input in order to reconstruct an experimental bode plot to view the frequency response of the system.
 
 	\subsection{Step Response $\omega_2$}
+		The step response data using the designed controller is listed below:
+		\begin{align*}
+			\mbox{RiseTime: } &1.6716 & \mbox{SettlingTime: } &9.9858 & \mbox{SettlingMin: } &-0.7918\\
+     		\mbox{SettlingMax: } &0.9590 & \mbox{Overshoot: } &354.2889 & \mbox{Undershoot: } &4.2572e+03\\
+     		\mbox{Peak: } &7.4199 & \mbox{PeakTime: } &6.4500 &
+     	\end{align*}
+     	\begin{figure}[H]
+			\centering
+			\includegraphics[scale=0.5]{experStepw2}
+			\caption{Experimental Step Response $\omega_2$}
+		\end{figure}
+		It can be seen near the end of the step response that the system is beginning to go unstable. Obviously, this is undesirable but we were unable to design a controller to compensate for this reaction.
 
 	\subsection{Frequency Response $\omega_2$}
+		In order to reconstruct a bode plot for the $\omega_2$ controller it was necessary to collect data at multiple frequencies. We collected data at 1,2,3,4,5 hertz. This data was then processed in Matlab to create the below bode plot.
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale=0.5]{experBodew2}
+			\caption{Experimental Step Response $\omega_2$}
+		\end{figure}
+		Collecting data for more frequencies would provide a much more accurate bode plot but this is a fair representation of the important features of the frequency response.
 
 \section{Controller Comparison}
 
