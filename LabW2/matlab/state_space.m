@@ -33,6 +33,14 @@ H_Bu  = TFs(3);
 % negative feedback loop for all transfer functions
 cl = feedback(series(C,TFs),1,1,1);
 
+% step response uncompensated
+cl_noComp = feedback(TFs,1,1,1);
+figure
+step(cl_noComp(1));
+title('Step response for \omega_1 feedback, no compensation');
+stepresp0 = stepinfo(cl_noComp(1))
+[Gm0,Pm0,Wgm0,Wpm0] = margin(cl_noComp(1))
+
 % convert to discrete time
 c2d(cl(1),.01,'tustin');
 
@@ -40,6 +48,13 @@ c2d(cl(1),.01,'tustin');
 % figure(1); bode(cl(1)); title('H_{w1u}');
 % figure(2); bode(cl(2)); title('H_{w2u}');
 % figure(3); bode(cl(3)); title('H_{Bu}');
+
+%step response
+stepresp = stepinfo(cl(1))
+figure
+step(cl(1), 5);
+title('Step response for \omega_1 feedback');
+
 
 % gain and phase margin
 [Gm1,Pm1,Wgm1,Wpm1] = margin(cl(1));
