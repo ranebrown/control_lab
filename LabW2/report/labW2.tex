@@ -29,7 +29,6 @@
 \maketitle
 \tableofcontents
 \listoffigures
-\listoftables
 \newpage
 
 \section{Description}
@@ -223,5 +222,6 @@ The experimental frequency response shown above follows the predicted response, 
 		Collecting data for more frequencies would provide a much more accurate bode plot but this is a fair representation of the important features of the frequency response.
 
 \section{Controller Comparison}
+When comparing the responses for the two controller designs it is clear that using $\omega_1$ to design a collocated controller provides a much more stable system. The $\omega_1$ controller is able to compensate for the movement of the lower and middle discs without creating an instability. It is possible that we could have designed a more robust controller using $\omega_2$ but this is challenging due to the pole excess when looking at the $\omega_2$ transfer function. For this lab we gathered enough data to prove using $\omega_1$ is more reliable and accurate. In future labs we will account for the multiple outputs of the system rather than relying on a single output to control the more complex two disc torsional disc system. 
 
 \end{document}
