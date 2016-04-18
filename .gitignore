@@ -1,3 +1,5 @@
+*.pdf
+
 torsional-interface/
 *.db
 *.asv
