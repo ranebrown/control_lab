@@ -94,25 +94,41 @@
 			System bandwidth should be \textcolor{red}{idk!!!}
 		\end{itemize}
 		
-		To meet these specifications, we used Matlab's sisotool to design a lead-lag controller. The lead network increases the speed of system response, increases phase margin, and decreases overshoot, giving us a faster system with good stability. The lag network provides improvement in steady state tracking, and with the lead network, allows attenuation of low and high frequencies. The controller we used was 
+		To meet these specifications, we used several design iterations in Matlab's sisotool to design a lead-lag controller. The lead network increases the speed of system response, increases phase margin, and decreases overshoot, giving us a faster system with good stability. The lag network provides improvement in steady state tracking, and with the lead network, allows attenuation of low and high frequencies. The controller we used was 
 		\begin{equation*}
 		C = 1.7241\frac{(1+ .68s)(1+0.1s)}{(1+0.097s)(1+3.9s)}
+		\end{equation*}
+		
+		resulting in an overall system transfer function of 
+		\begin{equation*}
+		H_{\omega_1u_{compensated}}=\frac{8.219 s^4 + 96.34 s^3 + 3419 s^2 + 3.7600 s + 48160}{s^5 + 19.38 s^4 + 725.6 s^3 + 10170 s^2 + 41280 s + 48670}  
 		\end{equation*}
 
 	\subsection{Step Response $\omega_1$}
 		Our controller provided a relatively good step response, with a rise time of  0.27 seconds, overshoot of 11.6\%, and a settling time of 1.9 seconds. The step response is plotted below.
 		
-	\begin{figure}[H]
-        \centering
-        \includegraphics[trim={6cm 0 1cm 1cm},clip,origin=c,scale=0.26]{rlplot_4w_6cm_2disks}
-        \caption{Root Locus Plot $H_{\omega_{1}u}$}
-        \label{fig:disc_sys}
-    \end{figure}
+      	\begin{figure}[H]
+        		\centering
+        		\includegraphics[trim={6cm 0 1cm 1cm},clip,origin=c,scale=0.35]{w1_step}
+        		\caption{System step response with $\omega_1$ feedback}
+        		\label{fig:w1_step}
+    	\end{figure}
 		
 	\subsection{Frequency Response $\omega_1$}
+	
+	\begin{figure}[H]
+        		\centering
+        		\includegraphics[trim={6cm 0 1cm 1cm},clip,origin=c,scale=0.35]{w1_bode}
+        		\caption{System frequency response with $\omega_1$ feedback}
+        		\label{fig:w1_bode}
+    	\end{figure}
+	
+	With the addition of our controller, the closed loop system has infinite gain margin, a phase margin of 150\degree, and a bandwidth of 5.94 rad/s, which can be seen from the above frequency response plots. Thus, our theoretical system was shown to be stable with this controller, and it was tested on the physical torsional disc system to further evaluate its performance. 
 
 \section{TDS Controller Implementation $\omega_1$}
 
+	
+	
 	\subsection{Step Response $\omega_1$}
 
 	\subsection{Frequency Response $\omega_1$}
