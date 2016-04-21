@@ -1,0 +1,68 @@
+
+
+close all;
+
+J1 = get_Jmotor(6.5, 4);%include motor inertia
+J2 = get_J(6.5, 2);
+J3 = get_J(6.5, 2);
+
+bb = 0.305;
+kk = 2.55;
+cc1 = 0.005;
+cc2 = 0.0016;
+cc3 = cc2;
+
+b1 = bb/J1;
+k11 = kk/J1;
+c11 = cc1/J1;
+k12 = kk/J2;
+k22 = kk/J2;
+c22 = cc2/J2;
+k23 = kk/J3;
+c33 = cc3/J3;
+
+s = tf('s');
+
+%x = [tha dth1 th2 dth2 th3 dth3]
+A = [0 1 0 0 0 0;
+    -k11 -c11 k11 0 0 0;
+    0 0 0 1 0 0;
+    k12 0 -k12-k22 -c22 k22 0;
+    0 0 0 0 0 1;
+    0 0 k23 0 -k23 -c33];
+
+B = [0; b1; 0; 0; 0; 0];
+
+%outputs are th1 th2 and beta21 = th2-th1 and beta32 = th3-th2
+C = [1 0 0 0 0 0; 0 0 1 0 0 0; -1 0 1 0 0 0; 0 0 -1 0 1 0];
+
+tds = ss(A, B, C, 0);
+
+Hth1u = zpk(tds(1));
+Hth2u = zpk(tds(2));
+Hth3u = zpk(tds(3));
+
+%lead compensator
+Cs = (1 + 0.7*s)/(1 + 0.07*s);
+
+tds_cl = feedback(series(Cs,tds),1,1,1);
+
+p = pole(tds_cl);
+
+z1 = zero(tds_cl(1));
+
+z2 = zero(tds_cl(2));
+
+z3 = zero(tds_cl(3));
+
+figure, bode(tds_cl(1)), grid on, title('r -> \theta_1')
+
+figure, rlocus(Hth1u), grid on, title('r -> \theta_1 no compensation')
+
+figure, rlocus(tds_cl(1)), grid on, title('r -> \theta_1')
+
+figure, bode(tds_cl(2)), grid on, title('r -> \theta_2')
+
+figure, bode(tds_cl(3)), grid on, title('r -> \beta_2_1')
+
+figure, bode(tds_cl(4)), grid on, title('r -> \beta_3_2')
