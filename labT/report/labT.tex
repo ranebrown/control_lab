@@ -1,6 +1,8 @@
 \documentclass[11pt,titlepage]{article}
+\usepackage{textcomp}
 \usepackage{fullpage}
 \usepackage{amsmath}
+\usepackage{lmodern}
 \usepackage{amssymb}
 \usepackage{gensymb}
 \usepackage[parfill]{parskip}
@@ -22,7 +24,7 @@
 }
 
 \author{Rane Brown \\ Kate Schneider}
-\title{ECEN 4638: Lab W2}
+\title{ECEN 4638: Lab T}
 \date{\today}
 
 \begin{document}
@@ -31,197 +33,69 @@
 \listoffigures
 \newpage
 
-\section{Description}
-	The goal of this lab is to design a controller and investigate the response of a two disc system when using $\omega_1$ for feedback and measurement versus using $\omega_2$. The key difference between these two methods is $\omega_1$ is collocated control while $\omega_2$ is non-collocated. We anticipate using $\omega_1$ will produce a more robust controller and during the course of this lab we will confirm or refute this prediction.
+\section{Introduction}
+    LabT is our final lab where we explore the TDS with all three of the discs attached. This system is more complex than previous iterations and requires more care in order to protect the TDS from damage. The goal of the lab is to design a controller that is capable of stabilizing the system with a sinusoidal reference. We used Matlab to design our controller and view the response at different frequencies. We learned that the system behaves differently at various frequencies. The major point of interest is the frequency where the middle disc is held stationary and the bottom and top discs exhibit minor movement. We will first discuss the controller design and then exam the response of the live system.
 
-\section{Setup}
-	For the following experiments we will arrange the TDS with the lower disc containing four weights at 6.5 cm and the middle disc with two weights at 6.5 cm. Using this setup the system parameters calculated from the methods described in Lab W are the following:
-	\begin{align*}
-		b &= 0.305 & k &= 2.55\\
-		c_1 &= 0.004 & c_2 &= 0.0016\\
-		J_1 &= 0.011475 & J_2 &= 0.0064375
-	\end{align*}
+\section{Controller Design}
+    \subsection{Setup}
+        For this lab we will use all three discs. The top and middle discs will have 2 weights at 6.5cm, while the bottom disc is setup with 4 weights at 6.5cm. A state space model is used to represent the system rather than individual transfer functions. It was also necessary to modify the existing Labview design to use a sinusoid input and collect the needed data.
+        \subsubsection{Modified Labview Design}
+            \begin{figure}[H]
+                    \centering
+                    \includegraphics[scale=0.35]{labview}
+                    \caption{Modified Labview Design}
+                    \label{fig:labview}
+            \end{figure}
+    \subsection{Equations of Motion}
+        The 3 disc TDS can be represented by the following system of equations:
+        \begin{align}
+            J_1\ddot{\Theta_1} &+ c_1\dot{\Theta_1} + k_1(\Theta_1 - \Theta_2) = bu \\
+            J_2\ddot{\Theta_2} &+ c_2\dot{\Theta_2} + k_1(\Theta_2 - \Theta_1) + k_2(\Theta_2-\Theta_3) = 0 \\
+            J_3\ddot{\Theta_3} &+ c_3\dot{\Theta_3} + k_2(\Theta_3 - \Theta_2) = 0
+        \end{align}
+    \subsection{Calculated System Values}
+        The system values needed in order to design a functional controller a listed below:
+        \begin{align}
+            J_1 &=0.0115     &       J_2 &= 0.0064       &   J_3 &= 0.0064  \\
+            b &= 0.305       &       k &= 2.55           &   C_1 &= 0.005   \\
+            c_2 &= 0.0016    &       c_3 &= 0.0016       &       &          \\
+        \end{align}
+    \subsection{Controller}
+        Using the state space representation of the E.O.M. we designed the following controller using SISO tool.
+        \begin{equation}
+            C_s = \frac{995.3 s^2 + 8423 s + 1036}{s^2 + 29.15 s + 103.6}
+        \end{equation}
+        This controller has a large DC gain of $~10$ and attempts to stabilize the system in a more aggressive manner. This method was chosen to reduce the magnitude of the instabilities at certain frequencies.
+    \subsection{Matlab Plots}
+        The majority of our controller design was conducted using SISO tool and viewing the root locus of the system. This allowed us to make the desired changes to the phase and gain margins and view the results in real time.
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale=0.35]{r_locus}
+            \caption{Root Locus}
+            \label{fig:rlocus}
+        \end{figure}
+        We found it more beneficial to plot multiple bode plots on one graph. This allowed us to view the relation between different disc levels. As seen in the below plot, the middle disc should remain still at 3.2 Hz.
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale=0.35]{bode_all}
+            \caption{Combined Bode Plots}
+            \label{fig:bode_all}
+        \end{figure}
+        In order to use the designed controller in Labview we first converted it to discrete time. The below plot shows the discrete time controller and the continuous time controller on the same plot. Clearly, the discrete time controller tracks the continuous reasonably well and should operate as desired.
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale=0.35]{Cs_Cz}
+            \caption{Continuous vs. Discrete Controller}
+            \label{fig:csCz}
+        \end{figure}
 
-\section{System model}
-	
-	\subsection{LTI model}	
-		The two disc torsional disc system can be modeled as an LTI system with the following equations:
-		\begin{align}
-			J_1\ddot \theta_1+c_1\dot \theta_1+k(\theta_1-\theta_2)&=bu \\
-			J_2\ddot \theta_2+c_2\dot \theta_2+k(\theta_2-\theta_1)&=0
-		\end{align}
-		 The difference in position of the discs, $\beta$ is also of interest, where $\beta = \theta_1-\theta_2$. If we make this substitution, as well as substituting in angular velocity $\omega$ for $\dot \theta$, our system becomes:
-		 \begin{align}
-		 	J_1\dot \omega_1+c_1\omega_1+k\beta=bu \\
-			J_2\dot \omega_2+c_2\omega_2-k\beta=0
-		 \end{align}
-	 
-	\subsection{State Space Representation}
-		Lab W2 will use the state space representation of the LTI model. State space methods are used because they are easier to manipulate when dealing with a system with multiple outputs such as the two disc TDS.
-		\begin{equation}
-			\begin{bmatrix}
-				\dot \omega_1\\
-				\dot \omega_2\\
-				\dot \beta
-			\end{bmatrix}=
-	  		\begin{bmatrix}
-	    		-\frac{c_1}{J_1} & 0 & -\frac{k}{J_1} \\
-		    	0 & -\frac{c_2}{J_2} & -\frac{k}{J_2}\\
-				1 & -1 & 0
-	  		\end{bmatrix}
-			\begin{bmatrix}
-				\omega_1\\
-				\omega_2\\
-				\beta
-			\end{bmatrix}+
-			\begin{bmatrix}
-				\frac{b}{J_1}\\
-				0\\
-				0
-			\end{bmatrix}
-		\end{equation}
+\section{Controller Implementation on TDS}
+    \subsection{Live System Results}
+        After completing the above controller design we implemented the controller on the TDS. We at first encountered problems with the "kill switch" being activated each time we ran an experiment. The reason for this was the amplitude of the sinusoidal input and the speed at which the system attempted to reach the input frequency. To remedy the problem we reduced the amplitude of the sinusoid from 1 to 0.15 and changed the reference signal to start as a ramp rather than a step. This resolved the issue and we then conducted a frequency sweep of the system to determine if our Matlab analysis aligned with the actual results. As expected we were able to view the middle disc remaining in a stationary position at 3.2 Hz. Another important observation was the amount of gain we used in the controller design. With a DC gain of 10 the system responded abruptly to minor changes and at the resonant peaks the kill switch was quickly activated. Reducing the gain helped with this problem some but did not eliminate the issue.
+    \subsection{Experimental Plots}
+    The below plots show the response of the live system using our designed controller.
 
-\section{Matlab Controller Design $\omega_1$}
-	
-	\subsection{Specifications $\omega_1$}
-		\begin{itemize}
-			\item Rise time:\\
-			The controller should provide a relatively quick response; thus a rise time under 0.5 seconds is desired. 
-			\item Overshoot:\\
-			We would like to reduce overshoot for the system, keeping it within $10\%$ if possible, and within $15\%$ if that is more feasible.
-			\item Bandwidth:\\
-			System bandwidth should be as high as is possible to achieve without compromising other areas of system performance.
-		\end{itemize}
-		
-		To meet these specifications, we used several design iterations in Matlab's sisotool to design a lead-lag controller. The lead network increases the speed of system response, increases phase margin, and decreases overshoot, giving us a faster system with good stability. The lag network provides improvement in steady state tracking, and with the lead network, allows attenuation of low and high frequencies. The controller we used was 
-		\begin{equation*}
-		C = 1.7241\frac{(1+ .68s)(1+0.1s)}{(1+0.097s)(1+3.9s)}
-		\end{equation*}
-		
-		resulting in an overall system transfer function of 
-		\begin{equation*}
-		H_{\omega_1u_{compensated}}=\frac{8.219 s^4 + 96.34 s^3 + 3419 s^2 + 3.7600 s + 48160}{s^5 + 19.38 s^4 + 725.6 s^3 + 10170 s^2 + 41280 s + 48670}  
-		\end{equation*}
-
-	\subsection{Step Response $\omega_1$}
-		Our controller provided a relatively good step response, with a rise time of  0.27 seconds, overshoot of 11.6\%, and a settling time of 1.9 seconds. The step response is plotted below.
-		
-      	\begin{figure}[H]
-        		\centering
-        		\includegraphics[trim={=1cm 0 1cm 1cm},clip,origin=c,scale=0.35]{w1_step}
-        		\caption{System step response with $\omega_1$ feedback}
-        		\label{fig:w1_step}
-    	\end{figure}
-		
-	\subsection{Frequency Response $\omega_1$}
-	
-	\begin{figure}[H]
-        		\centering
-        		\includegraphics[trim={1cm 0 1cm 1cm},clip,origin=c,scale=0.35]{w1_bode}
-        		\caption{System frequency response with $\omega_1$ feedback}
-        		\label{fig:w1_bode}
-    	\end{figure}
-	
-	With the addition of our controller, the closed loop system has infinite gain margin, a phase margin of 150\degree, and a bandwidth of 5.94 rad/s, which can be seen from the above frequency response plots. Thus, our theoretical system was shown to be stable with this controller, and it was tested on the physical torsional disc system to further evaluate its performance. 
-
-\section{TDS Controller Implementation $\omega_1$}
-	
-	\subsection{Step Response $\omega_1$}
-	
-	\begin{figure}[H]
-        		\centering
-        		\includegraphics[trim={0cm 0 0cm 0cm},clip,origin=c,scale=0.35]{w1_exp_step}
-        		\caption{Experimental step response with $\omega_1$ feedback}
-        		\label{fig:w1_exp_step}
-    	\end{figure}
-
-	From the plot of the experimental step response above, we can see that this controller performed well on the physical system, producing fast rise time, minimal overshoot and little noise. For a collocated system, it appears that a simple lead-lag compensator is sufficient to provide decent control.
-	
-	\subsection{Frequency Response $\omega_1$}
-
-	\begin{figure}[H]
-        		\centering
-        		\includegraphics[trim={0cm 0 0cm 0cm},clip,origin=c,scale=0.35]{w1_exp_mag}
-        		\label{fig:w1_exp_mag}
-    	\end{figure}
-	\begin{figure}[H]
-        		\centering
-        		\includegraphics[trim={0cm 0 0cm 0cm},clip,origin=c,scale=0.27]{w1_exp_freq}
-        		\caption{Experimental frequency response with $\omega_1$ feedback}
-        		\label{fig:w1_exp_freq}
-    	\end{figure}
-
-The experimental frequency response shown above follows the predicted response, albeit with fewer data points, (and over a much reduced data range) so the fit is not exact. In general, our controller performed similarly on the physical system as was predicted in Matlab analysis. The physical bandwidth appears to be lower than the 5.9 rad/s predicted by Matlab analysis, and the gain is less, with the magnitude plot shifted down. 
-
-
-\section{Matlab Controller Design $\omega_2$}
-
-	\subsection{Specifications $\omega_2$}
-		The first step in designing a controller that uses $\omega_2$ as the measurement was to select desired system parameters. Based on previous performance of the TDS we decided to select the following parameters.
-		\begin{itemize}
-			\item rise time $< 1sec$
-			\item overshoot $< 15\%$
-			\item bandwidth $> 10 \frac{rad}{sec}$
-		\end{itemize}
-
-	\subsection{Sisotool}
-		After selecting these parameters and entering the system model into Matlab as a state space system we used sisotool to design a notch filter. Matlab's sisotool is very useful because it displays real time results of the controller and the poles and zeros can be adjusted on a root locus plot.
-		\begin{figure}[H]
-			\centering
-			\includegraphics[scale=0.4]{rlocusw2}
-			\caption{Root Locus $\omega_2$}
-		\end{figure}
-		As seen in the root locus plot this system goes unstable if the gain is increased too much. The reason for this is the pole excess in the $H_{u\omega_2}$ transfer function. It is difficult to design a controller that compensates for this excess since it is not possible to create an improper system. Adding additional zeros to the controller helps to stabilize the system but this would require being able to detect the future which is not possible.
-
-	\subsection{Step Response $\omega_2$}
-		The below figure shows the step response of the closed loop system when using the $\omega_2$ notch filter controller. This controller provides the following specifications:
-		\begin{align*}
-			\mbox{RiseTime: } &0.1512 & \mbox{SettlingTime: } &0.7404 & \mbox{SettlingMin: } &0.8862\\
-     		\mbox{SettlingMax: } &1.1231 & \mbox{Overshoot: } &16.2071 & \mbox{Undershoot: } &0\\
-     		\mbox{Peak: } &1.1231 & \mbox{PeakTime: } &0.3407 &
-        \end{align*}
-        The rise time meets the desired rise time of less than 1 second but the overshoot is slightly higher than desired. This is a compromise that we are willing to make.
-		\begin{figure}[H]
-			\centering
-			\includegraphics[scale=0.4]{stepw2}
-			\caption{Step Response $\omega_2$}
-		\end{figure}
-
-	\subsection{Frequency Response $\omega_2$}
-		From the bode plot we can see the system will have a relatively low bandwidth but it should meet our design requirements. There is also a section where the higher order system causes an undesirable peak. This could be further reduced with more controller iterations. Using Matlab we calculated the bandwidth to be 14.0037 rad/sec.
-		\begin{figure}[H]
-			\centering
-			\includegraphics[scale=0.4]{bodew2}
-			\caption{Bode Plot $\omega_2$}
-		\end{figure}
-
-\section{TDS Controller Implementation $\omega_2$}
-	After designing a controller using Matlab and viewing the ideal response values we tested the controller on the TDS system. There were two objectives during the tests. The first objective was to collect information on the step response using the $\omega_2$ controller. The second objective was to collect frequency information using a sinusoidal input in order to reconstruct an experimental bode plot to view the frequency response of the system.
-
-	\subsection{Step Response $\omega_2$}
-		The step response data using the designed controller is listed below:
-		\begin{align*}
-			\mbox{RiseTime: } &1.6716 & \mbox{SettlingTime: } &9.9858 & \mbox{SettlingMin: } &-0.7918\\
-     		\mbox{SettlingMax: } &0.9590 & \mbox{Overshoot: } &354.2889 & \mbox{Undershoot: } &4.2572e+03\\
-     		\mbox{Peak: } &7.4199 & \mbox{PeakTime: } &6.4500 &
-     	\end{align*}
-     	\begin{figure}[H]
-			\centering
-			\includegraphics[scale=0.5]{experStepw2}
-			\caption{Experimental Step Response $\omega_2$}
-		\end{figure}
-		It can be seen near the end of the step response that the system is beginning to go unstable. Obviously, this is undesirable but we were unable to design a controller to compensate for this reaction.
-
-	\subsection{Frequency Response $\omega_2$}
-		In order to reconstruct a bode plot for the $\omega_2$ controller it was necessary to collect data at multiple frequencies. We collected data at 1,2,3,4,5 hertz. This data was then processed in Matlab to create the below bode plot.
-		\begin{figure}[H]
-			\centering
-			\includegraphics[scale=0.5]{experBodew2}
-			\caption{Experimental Step Response $\omega_2$}
-		\end{figure}
-		Collecting data for more frequencies would provide a much more accurate bode plot but this is a fair representation of the important features of the frequency response.
-
-\section{Controller Comparison}
-When comparing the responses for the two controller designs it is clear that using $\omega_1$ to design a collocated controller provides a much more stable system. The $\omega_1$ controller is able to compensate for the movement of the lower and middle discs without creating an instability. It is possible that we could have designed a more robust controller using $\omega_2$ but this is challenging due to the pole excess when looking at the $\omega_2$ transfer function. For this lab we gathered enough data to prove using $\omega_1$ is more reliable and accurate. In future labs we will account for the multiple outputs of the system rather than relying on a single output to control the more complex two disc torsional disc system. 
+\section{Conclusion}
+    This final lab was a good ending point for our exploration of the TDS system. We were able to design a controller that operates as desired with 3 discs attached to the TDS. Further exploration and time would allow us to design a more robus controller. Utilizing a SIMO or MIMO controller design would be much more accurate but unfortunately we did not have time to explore this option.
 
 \end{document}
