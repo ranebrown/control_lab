@@ -1,6 +1,6 @@
 close all;
 
-J1 = get_Jmotor(6.5, 4);%include motor inertia
+J1 = get_Jmotor(.065, 4);%include motor inertia
 J2 = get_J(.065, 2);
 J3 = get_J(.065, 2);
 
