@@ -93,7 +93,23 @@
     \subsection{Live System Results}
         After completing the above controller design we implemented the controller on the TDS. We at first encountered problems with the "kill switch" being activated each time we ran an experiment. The reason for this was the amplitude of the sinusoidal input and the speed at which the system attempted to reach the input frequency. To remedy the problem we reduced the amplitude of the sinusoid from 1 to 0.15 and changed the reference signal to start as a ramp rather than a step. This resolved the issue and we then conducted a frequency sweep of the system to determine if our Matlab analysis aligned with the actual results. As expected we were able to view the middle disc remaining in a stationary position at 3.2 Hz. Another important observation was the amount of gain we used in the controller design. With a DC gain of 10 the system responded abruptly to minor changes and at the resonant peaks the kill switch was quickly activated. Reducing the gain helped with this problem some but did not eliminate the issue.
     \subsection{Experimental Plots}
-    The below plots show the response of the live system using our designed controller.
+    The below plots show the response of the live system using our designed controller. The experimental plot for $H_{\theta_2u}$ is of particular interest here because it displays the results of the experimental frequency sweep, which allowed us to find the best frequency for keeping the middle disc stationary. The experimental plot for $H_{\theta_1u}$ shows that the system may have trouble attenuating higher-frequency noise with the chosen controller, which was not expected after analyzing the theoretical plot.
+    
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale=0.35]{bode_theta1}
+            \caption{Experimental Bode Plot for  $H_{\theta_1u}$}
+            \label{fig:bode_theta1}
+        \end{figure}
+        
+        \begin{figure}[H]
+            \centering
+            \includegraphics[scale=0.35]{bode_theta2}
+            \caption{Experimental Bode Plot for  $H_{\theta_2u}$}
+            \label{fig:bode_theta2}
+        \end{figure}
+        
+
 
 \section{Conclusion}
     This final lab was a good ending point for our exploration of the TDS system. We were able to design a controller that operates as desired with 3 discs attached to the TDS. Further exploration and time would allow us to design a more robus controller. Utilizing a SIMO or MIMO controller design would be much more accurate but unfortunately we did not have time to explore this option.
